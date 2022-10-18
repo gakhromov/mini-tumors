@@ -11,6 +11,7 @@ matplotlib = "==3.5.2"
 torch = "==1.11.0"
 torchvision = "==0.12.0"
 nd2 = "*"
+openpyxl = "*"
 
 [dev-packages]
 jupyter = "==1.0.0"
