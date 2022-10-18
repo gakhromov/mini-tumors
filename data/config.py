@@ -1,0 +1,4 @@
+DATASETS = [
+    "ColonCancer", 
+    # "BrainCancer",
+]
