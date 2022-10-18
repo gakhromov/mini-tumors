@@ -2,6 +2,8 @@ import os
 
 import numpy as np
 import pandas as pd
+import torch
+
 import matplotlib.pyplot as plt
 import json
 import nd2
@@ -166,7 +168,22 @@ class Data:
         img = nd2.imread(self.sample_list[sample_idx]['img_path'])
         _, x, y, r, label = self.sample_list[sample_idx]['splits'][split_idx]
         return img[:, x-r:x+r, y-r:y+r], label
-		
+
+
+def load_datasets(
+    batch_size = 64, 
+):  
+    # for now, train dataset = test
+    train_dataset = Data()
+    test_dataset = Data()
+    
+    train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+    test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
+    # you can use train and test datasets for visualisations
+    # call `train_dataset.show_sample(idx, channel=3)` to show an image of one sample
+    # call `train_dataset.show_droplet(idx, channel=3)` to show an image of one droplet
+    return train_dataset, test_dataset, train_dataloader, test_dataloader
+
 
 if __name__ == '__main__':
     data = Data()
