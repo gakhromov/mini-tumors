@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import json
 import nd2
 
-import config
+from data import config
 
 
 class Data:
@@ -37,6 +37,7 @@ class Data:
                     'sample_list': self.sample_list, 
                     'global_index_map': self.global_index_map,
                     }, f)
+                print('Meta data (dataset_meta.json) successfully generated')
 
     def get_sample_list(self, datasets: list):
         sample_list = []
@@ -183,9 +184,3 @@ def load_datasets(
     # call `train_dataset.show_sample(idx, channel=3)` to show an image of one sample
     # call `train_dataset.show_droplet(idx, channel=3)` to show an image of one droplet
     return train_dataset, test_dataset, train_dataloader, test_dataloader
-
-
-if __name__ == '__main__':
-    data = Data()
-    # data.show_sample(0)
-    # data.show_droplet(0)

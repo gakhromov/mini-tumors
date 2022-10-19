@@ -11,8 +11,7 @@ Data Science Lab 2022 Project - Mini-Tumors in Nanoliter-Droplets for Personaliz
 2. Install the dataset folder `TumorScoring` into the folder `/data`
 
 ## Running
-1. Type the command `pipenv run python data/data.py` to generate metadata for the dataset
-2. ?
+1. ?
 
 ## Packages
 All packages are listed in the `Pipfile`. Please install new package versions in accordance to this page [Python on Euler](https://scicomp.ethz.ch/wiki/Python_on_Euler), so that the package versions are synced between Euler and your local machine.
