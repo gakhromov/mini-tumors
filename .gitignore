@@ -1,4 +1,4 @@
 .ipynb_checkpoints
 .DS_STORE
 TumorScoring/
-dataset_meta.json
+clean/
