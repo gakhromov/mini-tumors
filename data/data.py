@@ -52,7 +52,7 @@ class Data:
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
         img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
-        return img[0, :, :], self.labels[idx, 1]
+        return torch.tensor(np.array([img[0, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
 
 
 def load_datasets(
