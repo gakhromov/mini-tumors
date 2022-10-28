@@ -36,7 +36,7 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
             total_accuracy += (torch.argmax(output, dim=1) == label).float().sum()
         
     total_loss /= len(val_dataloader)
-    total_accuracy /= (len(val_dataloader)*64)
+    total_accuracy /= (len(val_dataloader)*64) #change *64
 
     return total_loss, total_accuracy
 

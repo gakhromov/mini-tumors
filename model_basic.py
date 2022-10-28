@@ -12,7 +12,7 @@ class ConvNet(torch.nn.Module):
     """
     Simple convolutional neural network. 
     """
-    def __init__(self, feature_map_sizes, filter_sizes, activation=torch.nn.ReLU()):
+    def __init__(self, feature_map_sizes, filter_sizes, num_classes, img_size, activation=torch.nn.ReLU()):
         """
         Constructor for ConvNet.
         :param feature_map_sizes: list of out_channels for the convolution layers.
@@ -22,8 +22,6 @@ class ConvNet(torch.nn.Module):
         super().__init__()
         # Flatten layer
         self.flatten = torch.nn.Flatten() 
-        # Fully Connected
-        self.fc = FullyConnectedLayer(4096, 4, 'dense_layer', activation=activation) #need to change 4096 in terms of the feature map
         # Softmax
         self.softmax = torch.nn.Softmax(dim=1)
         # Convolutions
@@ -32,6 +30,8 @@ class ConvNet(torch.nn.Module):
         for i, (out_channels, filter_size) in enumerate(zip(feature_map_sizes, filter_sizes)):
             self.convolutions.append(ConvolutionPoolLayer(in_channels, filter_size, out_channels, f'conv{i}_layer', activation))
             in_channels = out_channels
+        #Fully Connected
+        self.fc = FullyConnectedLayer( int((img_size / 2**(len(filter_sizes)))**2 * out_channels), num_classes, 'dense_layer', activation=activation) #need to change 4096 in terms of the feature map and channel size
 
     def get_probabilities(self, x):
         """
@@ -115,6 +115,5 @@ def weights_init(m, init="Normal"):
         else:
             torch.nn.init.xavier(m.weight.data)
             torch.nn.init.xavier(m.bias.data)
-
 
             

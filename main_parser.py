@@ -16,10 +16,10 @@ parser.add_argument("--learning_rate", type=float, default=1e-4)
 parser.add_argument("--n_epochs", type=int, default=0)
 
 parser.add_argument("--num_image_channels", type=int, default=1)
-parser.add_argument("--num_classes", type=int, default=1)
+parser.add_argument("--num_classes", type=int, default=4)
 parser.add_argument("--batch_size", type=int, default=64)
-parser.add_argument("--feature_map_sizes", type=list, default=[64, 64, 64])
-parser.add_argument("--filter_sizes", type=list, default=[5, 5, 5])
+parser.add_argument("--feature_map_sizes", type=list, default=[32, 64, 128])
+parser.add_argument("--filter_sizes", type=list, default=[3, 3, 3])
 
 parser.add_argument("--model_path", type=str, default="")
 parser.add_argument("--save_path", type=str, default="")
@@ -30,6 +30,7 @@ print("State :", args.state)
 
 train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets()
 
+print(len(train_dataset))
 print(len(test_dataset))
 
 #Size to be changed
@@ -52,8 +53,9 @@ batch_size = args.batch_size
 feature_map_sizes = args.feature_map_sizes
 filter_sizes = args.filter_sizes
 
+#TODO we are using padding = same for now so the img size remains the same after the conv layer, only the maxpool /2 the size
 
-model = ConvNet(feature_map_sizes, filter_sizes, activation=torch.nn.ReLU()).double()
+model = ConvNet(feature_map_sizes, filter_sizes, num_classes, img_size, activation=torch.nn.ReLU()).double()
 if args.model_path != "": 
     model.load_state_dict(torch.load("./model_weights/" + args.model_path, map_location=device))
     NUM_EPOCH = int(args.model_path.split("_")[-1].split(".")[0])

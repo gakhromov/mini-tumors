@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from data import config
 
 
-class Data:
+class Data(torch.utils.data.Dataset):
     def __init__(self):
         self.labels = np.load(f'{config.ROOT_PATH}/data/clean/labels.npy')
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
@@ -59,8 +59,14 @@ def load_datasets(
     batch_size = 64, 
 ):  
     # for now, train dataset = test
-    train_dataset = Data()
-    test_dataset = Data()
+
+    dataset = Data()
+
+    print("type dataset", type(dataset))
+    
+    #train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[len(dataset)*0.8, len(dataset)*0.2], generator=torch.Generator())
+    
+    train_dataset, test_dataset = Data(), Data()
     
     train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
