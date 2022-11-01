@@ -1,4 +1,5 @@
 from model_basic import *
+from tqdm import tqdm
 
 # Keep track of the numbers of epochs executed so far
 
@@ -8,7 +9,7 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
     """
 
     model.train()
-    for i, (image, label) in enumerate(train_dataloader):
+    for i, (image, label) in enumerate(tqdm(train_dataloader)):
         image, label = image.to(device), label.to(device) # put the data on the selected execution device
         optimizer.zero_grad()   # zero the parameter gradients
         output = model(image)  # forward pass
@@ -28,7 +29,7 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
     model.eval()
     total_loss, total_accuracy = 0., 0.
     with torch.no_grad():
-        for i, (image, label) in enumerate(val_dataloader):
+        for i, (image, label) in enumerate(tqdm(val_dataloader)):
             image, label = image.to(device), label.to(device) # put the data on the selected execution device
             output = model(image)  # forward pass
             loss = cross_entropy_loss(output, label)    # compute loss
