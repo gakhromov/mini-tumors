@@ -18,36 +18,40 @@ class Data(torch.utils.data.Dataset):
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
             self.sample_list = json.load(f)
 	
-    def show_sample(self, sample_idx: int, channel: int = 99):
+    def show_sample(self, sample_idx: int, channel: int = -1):
         if sample_idx >= len(self.sample_list['samples']):
             print(f'Error: index too large (there are {len(self.sample_list)} samples)')
             return
 
         img = nd2.imread(self.sample_list['samples'][sample_idx]['img_path'])
 
-        if not ((0 <= channel <= img.shape[0]-1) or (channel == 99)):
+        if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
             print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
             return
 
-        if channel == 99:
+        if channel == -1:
             channel = img.shape[0]-1
 
         plt.title('Sample = ' + self.sample_list['samples'][sample_idx]['name'])
         plt.imshow(img[channel,:,:])
         plt.show()
 
-    def show_droplet(self, idx: int, channel: int = 3): # this function is still bugged
+    def show_droplet(self, idx: int, channel: int = -1): # this function is still bugged
         if idx >= len(self.labels):
             print(f'Error: index too large (there are {len(self.labels)} labeled droplets)')
             return
-        if not (0 <= channel <= 3):
-            print(f'Error: there are only 4 channels: (0,1,2 and 3)')
+
+        label = self.labels[idx, 1]
+        img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
+
+        if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
+            print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
             return
+
+        if channel == -1:
+            channel = img.shape[0]-1
         
-        img, label = self.__getitem__(idx)
-        sample_idx, split_idx = self.global_index_map[idx]
-        dropidx, _, _, _, _ = self.sample_list['samples'][sample_idx]['splits'][split_idx]
-        plt.title(f'Sample = {self.sample_list[sample_idx]["name"]}, DropIdx = {dropidx}. Label = {str(label)}')
+        plt.title(f'Droplet id = {idx}. Label = {str(label)}')
         plt.imshow(img[channel,:,:])
         plt.show()
 
@@ -57,7 +61,7 @@ class Data(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
         img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
-        return torch.tensor(np.array([img[img.shape[0]-1, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        return torch.tensor(img[img.shape[0]-1, :, :]), torch.tensor(self.labels[idx, 1], dtype=torch.long)
 
 
 def load_datasets(
