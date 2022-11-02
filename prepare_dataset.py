@@ -64,7 +64,9 @@ def get_sample_list(datasets: list):
                 })
     return sample_list
 
-def create_splits_with_labels(sample_list, sample_idx: int, labels: list):
+def create_splits_with_labels(
+    sample_list: list, droplet_list: list, sample_idx: int, labels: list
+):
     df = pd.read_excel(
         sample_list[sample_idx]['xlsx_path'],
         index_col=0,
@@ -93,17 +95,19 @@ def create_splits_with_labels(sample_list, sample_idx: int, labels: list):
         # extract x & y coordinates of the center + diameter
         x, y, d = feats[['TrueCentroidX', 'TrueCentroidY', 'DiameterMeasure']].loc[droplet]
         x, y, d = map(int, [x, y, d])
-        # compute the radius (so that we don't have negative values)
+        # check if we get to the edge of the image:
         r = int(np.min([d//2, x, y, img.shape[1]-x, img.shape[2]-y]))
         # check for missing labels
         if droplet in df_labels.index:
             clean_idx = len(labels)
             # image
-            drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int16)
+            drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int32)
             np.save(f'{config.ROOT_PATH}/data/clean/img{clean_idx}.npy', drop_img)
             # label
             label = int(df_labels['label'].loc[droplet])
             labels.append((clean_idx, label))
+            # save metadata
+            droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
     
 
 if __name__ == '__main__':
@@ -114,13 +118,16 @@ if __name__ == '__main__':
         # check data folder to look for img files and
         # create a list with all sample info: sample name, img path, xlsx path, info txt path
         sample_list = get_sample_list(config.DATASETS)
+        droplet_list = []
         labels = []
 
         for i, sample in enumerate(tqdm(sample_list)):
-            create_splits_with_labels(sample_list, i, labels)
+            create_splits_with_labels(sample_list, droplet_list, i, labels)
         
         np.save(f'{config.ROOT_PATH}/data/clean/labels.npy', np.array(labels, np.int8))
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'w') as f:
             json.dump({'samples': sample_list}, f)
+        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'w') as f:
+            json.dump({'droplets': droplet_list}, f)
 
     
