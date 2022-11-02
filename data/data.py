@@ -16,14 +16,16 @@ class Data(torch.utils.data.Dataset):
     def __init__(self):
         self.labels = np.load(f'{config.ROOT_PATH}/data/clean/labels.npy')
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
-            self.sample_list = json.load(f)
+            self.sample_list = json.load(f)['samples']
+        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'r') as f:
+            self.droplet_list = json.load(f)['droplets']
 	
     def show_sample(self, sample_idx: int, channel: int = -1):
-        if sample_idx >= len(self.sample_list['samples']):
+        if sample_idx >= len(self.sample_list):
             print(f'Error: index too large (there are {len(self.sample_list)} samples)')
             return
 
-        img = nd2.imread(self.sample_list['samples'][sample_idx]['img_path'])
+        img = nd2.imread(self.sample_list[sample_idx]['img_path'])
 
         if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
             print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
@@ -32,11 +34,11 @@ class Data(torch.utils.data.Dataset):
         if channel == -1:
             channel = img.shape[0]-1
 
-        plt.title('Sample = ' + self.sample_list['samples'][sample_idx]['name'])
+        plt.title('Sample = ' + self.sample_list[sample_idx]['name'])
         plt.imshow(img[channel,:,:])
         plt.show()
 
-    def show_droplet(self, idx: int, channel: int = -1): # this function is still bugged
+    def show_droplet(self, idx: int, channel: int = -1):
         if idx >= len(self.labels):
             print(f'Error: index too large (there are {len(self.labels)} labeled droplets)')
             return
@@ -51,7 +53,10 @@ class Data(torch.utils.data.Dataset):
         if channel == -1:
             channel = img.shape[0]-1
         
-        plt.title(f'Droplet id = {idx}. Label = {str(label)}')
+        sample_idx = self.droplet_list[idx]['sample_idx']
+        x, y = self.droplet_list[idx]['x'], self.droplet_list[idx]['y']
+        sample_name = self.sample_list[sample_idx]['name']
+        plt.title(f'Droplet id = {idx}. Label = {str(label)}\nSample name = {sample_name}, at coordinate {x}, {y}')
         plt.imshow(img[channel,:,:])
         plt.show()
 
