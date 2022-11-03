@@ -13,6 +13,8 @@ torch = "==1.11.0"
 torchvision = "==0.12.0"
 openpyxl = "==3.0.10"
 nd2 = "*"
+locket = "*"
+pipfile = "*"
 
 [dev-packages]
 jupyter = "==1.0.0"
