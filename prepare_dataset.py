@@ -123,4 +123,3 @@ if __name__ == '__main__':
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'w') as f:
             json.dump({'samples': sample_list}, f)
 
-    
