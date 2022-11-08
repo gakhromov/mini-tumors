@@ -130,4 +130,3 @@ if __name__ == '__main__':
         with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'w') as f:
             json.dump({'droplets': droplet_list}, f)
 
-    

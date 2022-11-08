@@ -12,13 +12,16 @@ import matplotlib.pyplot as plt
 from data import config
 
 
-class Data(torch.utils.data.Dataset):
-    def __init__(self):
+class Data:
+    def __init__(self, transform = None):
+        '''
+        transform -- pytorch transform or Composition of several transforms applied to each fetched item.
+        '''
         self.labels = np.load(f'{config.ROOT_PATH}/data/clean/labels.npy')
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
-            self.sample_list = json.load(f)['samples']
-        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'r') as f:
-            self.droplet_list = json.load(f)['droplets']
+            self.sample_list = json.load(f)
+        
+        self.transform = transform
 	
     def show_sample(self, sample_idx: int, channel: int = -1):
         if sample_idx >= len(self.sample_list):
@@ -65,8 +68,13 @@ class Data(torch.utils.data.Dataset):
 	
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
+        # Not sure what is going wrong here, but the original doesn't work
         img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
-        return torch.tensor(np.array([img[img.shape[0]-1, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
+
+        if self.transform != None:
+            img = self.transform(img)
+
+        return img[0, :, :], self.labels[idx, 1]
 
 
 def load_datasets(
