@@ -23,31 +23,43 @@ class Data:
         
         self.transform = transform
 	
-    def show_sample(self, sample_idx: int, channel: int = 3):
+    def show_sample(self, sample_idx: int, channel: int = -1):
         if sample_idx >= len(self.sample_list):
             print(f'Error: index too large (there are {len(self.sample_list)} samples)')
             return
-        if not (0 <= channel <= 3):
-            print(f'Error: there are only 4 channels: (0,1,2 and 3)')
-            return
 
         img = nd2.imread(self.sample_list[sample_idx]['img_path'])
+
+        if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
+            print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
+            return
+
+        if channel == -1:
+            channel = img.shape[0]-1
+
         plt.title('Sample = ' + self.sample_list[sample_idx]['name'])
         plt.imshow(img[channel,:,:])
         plt.show()
 
-    def show_droplet(self, idx: int, channel: int = 3):
+    def show_droplet(self, idx: int, channel: int = -1):
         if idx >= len(self.labels):
             print(f'Error: index too large (there are {len(self.labels)} labeled droplets)')
             return
-        if not (0 <= channel <= 3):
-            print(f'Error: there are only 4 channels: (0,1,2 and 3)')
+
+        label = self.labels[idx, 1]
+        img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
+
+        if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
+            print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
             return
+
+        if channel == -1:
+            channel = img.shape[0]-1
         
-        img, label = self.__getitem__(idx)
-        sample_idx, split_idx = self.global_index_map[idx]
-        dropidx, _, _, _, _ = self.sample_list[sample_idx]['splits'][split_idx]
-        plt.title(f'Sample = {self.sample_list[sample_idx]["name"]}, DropIdx = {dropidx}. Label = {str(label)}')
+        sample_idx = self.droplet_list[idx]['sample_idx']
+        x, y = self.droplet_list[idx]['x'], self.droplet_list[idx]['y']
+        sample_name = self.sample_list[sample_idx]['name']
+        plt.title(f'Droplet id = {idx}. Label = {str(label)}\nSample name = {sample_name}, at coordinate {x}, {y}')
         plt.imshow(img[channel,:,:])
         plt.show()
 
@@ -69,8 +81,10 @@ def load_datasets(
     batch_size = 64, 
 ):  
     # for now, train dataset = test
-    train_dataset = Data()
-    test_dataset = Data()
+
+    dataset = Data()
+
+    train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
     
     train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
