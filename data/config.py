@@ -5,6 +5,6 @@ DATASETS = [
     # "BrainCancer",
 ]
 
-IMG_SIZE = (128, 128)
+IMG_SIZE = (299, 299)
 
 ROOT_PATH = os.getcwd()

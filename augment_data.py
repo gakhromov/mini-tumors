@@ -7,15 +7,18 @@ from data import config
 import sys
 import numpy as np
 import cv2
+from skimage.transform import resize
+from sklearn.model_selection import train_test_split
 
 from data.data import Data
 from data import filters
 
+import json
 from tqdm import tqdm
 
 class DataAugmentor:
     '''
-    TODO: Doccument
+    Perform offline data augmentation by passing each example through 3 stages of filter.
     '''
     
     def __init__(self, filters_1, filters_2, filters_3):
@@ -39,6 +42,10 @@ class DataAugmentor:
         # Store lists of new indecies and labels
         self.augmented_labels = []
         self.new_inx = 0
+        self.sample_list = []
+
+        with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
+            old_sample_list = json.load(f)
 
         # For each example in dataset
         for ind in tqdm(range(len(self.clean_data.labels))):
@@ -58,7 +65,7 @@ class DataAugmentor:
             for filter in self.filters_2:
                 pics = pics + filter.transform(original_pic)
 
-
+            # For each of the several pics outputted by stage 2
             for pic in pics:
                 # Apply Random transformations to images
                 for filter in self.filters_3:
@@ -75,12 +82,66 @@ class DataAugmentor:
 
         # Record augmented dataset labels
         np.save(f'{config.ROOT_PATH}/data/augmented/labels.npy', np.array(self.augmented_labels, np.int8))
+
+
+class AugmentedData(Data):
+    '''
+    Seperate data loader for Augmented data.
+    '''
+    def __init__(self, transform = None, indecies = None):
+        '''
+        If indecies is None load entire augmented dataset. Else, load subset of the dataset indexed
+        by indecies.
+        '''
+        if indecies == None:
+            self.labels = np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy')
+            self.indecies = range(len(self.labels))
+        else:
+            self.labels = np.take(np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy'), indices=indecies)
+            self.indecies = indecies
+
+        self.transform = transform
+
+    '''
+    Implement __len__ and __getitem__ for compatibility with pytorch
+    '''
+    def __len__(self):
+        return len(self.indecies)
+
+    def __getitem__(self, idx):
+        # Get actual index
+        ds_index = self.indecies[idx]
+
+        img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
+        img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
+
+        if self.transform != None:
+            img = self.transform(img)
+        
+        return img, self.labels[idx]
     
+
+def create_split(test_transform = None, train_transform = None, test_percentage = 0.2):
+    '''
+    Create and return two AugmentedData objects, one each for the train and test split. Test split is 
+    test_percentage sized random sample of entire dataset.
+    '''
+    all_data = AugmentedData()
+
+    train_idx, test_idx = train_test_split(list(range(len(all_data))), test_size=test_percentage)
+
+    train_data = AugmentedData( train_transform, indecies=train_idx)
+    test_data = AugmentedData( test_transform, indecies=test_idx)
+    return train_data, test_data
+
+
 
 if __name__ == '__main__':
     if not os.path.exists(f'{config.ROOT_PATH}/data/augmented'):
         os.makedirs(f'{config.ROOT_PATH}/data/augmented')
-        da = DataAugmentor(filters.stage1, filters.stage2, filters.stage3)
+        #da = DataAugmentor(filters.stage1, filters.stage2, filters.stage3)
+        da = DataAugmentor([],[],[])
         da.augment_data()
     else:
         print(f'ERROR: {config.ROOT_PATH}/data/augmented already exists. Perhaps the augmented dataset is already generated', file=sys.stderr)
+
