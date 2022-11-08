@@ -1,4 +1,4 @@
-from model_basic import *
+from model.model import *
 from tqdm import tqdm
 from datetime import date
 import random

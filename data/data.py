@@ -66,7 +66,7 @@ class Data(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
         img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
-        return torch.tensor(img[img.shape[0]-1, :, :]), torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        return torch.tensor(np.array([img[img.shape[0]-1, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
 
 
 def load_datasets(
@@ -76,15 +76,7 @@ def load_datasets(
 
     dataset = Data()
 
-<<<<<<< HEAD
-    print("type dataset", type(dataset))
-    
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
-    
-    # train_dataset, test_dataset = Data(), Data()
-=======
-    train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
->>>>>>> 62c5b40 (tensorboard)
     
     train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
