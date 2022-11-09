@@ -31,7 +31,7 @@ args = parser.parse_args()
 
 print("State :", args.state)
 
-train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets(img_size = args.img_size)
+train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets(batch_size = args.batch_size, img_size = args.img_size)
 
 #Size to be changed
 img_size = args.img_size
@@ -95,7 +95,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9, verbose=True)
 
 if args.state == "train":
-    train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler,  args.n_epochs, train_dataloader, test_dataloader, args.save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer)
+    train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler,  args.n_epochs, train_dataloader, test_dataloader, args.save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer, args.batch_size)
 
 #Not a real test just to check some results
 if args.state == "test":

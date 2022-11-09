@@ -5,11 +5,12 @@ import random
 
 # Keep track of the numbers of epochs executed so far
 
-def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS):
+def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS, batch_size):
     """
     Train model for 1 epoch.
     """
     model.train()
+    total_loss, total_accuracy = 0., 0.
     for i, (image, label) in enumerate(tqdm(train_dataloader)):
 
         image, label = image.to(device), label.to(device) # put the data on the selected execution device
@@ -29,15 +30,19 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         NUM_STEPS += 1
 
         training_writer.add_scalar('loss', loss.item(), NUM_STEPS)
+        total_loss += loss.item()
 
         train_accuracy = (torch.argmax(output, dim=1) == label).float().sum() / len(label) #get the accuracy for the batch
         training_writer.add_scalar('accuracy', train_accuracy, NUM_STEPS)
+        total_accuracy += (torch.argmax(output, dim=1) == label).float().sum()
+    
+    total_loss /= len(train_dataloader)
+    total_accuracy /= (len(train_dataloader)*batch_size)
+
+    return total_loss, total_accuracy
 
 
-    return loss, train_accuracy
-
-
-def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_dataloader):
+def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_dataloader, batch_size):
     """
     Evaluate model on validation data.
     """
@@ -52,11 +57,11 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
             total_accuracy += (torch.argmax(output, dim=1) == label).float().sum()
         
     total_loss /= len(val_dataloader)
-    total_accuracy /= (len(val_dataloader)*64) #TODO change *64
+    total_accuracy /= (len(val_dataloader)*batch_size)
 
     return total_loss, total_accuracy
 
-def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer):
+def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer, batch_size):
     """
     Train and evaluate model.
     """
@@ -64,7 +69,7 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
     for epoch in range(n_epochs):
         
         # train model for one epoch
-        train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS)
+        train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS, batch_size)
         scheduler.step()
 
         for name, weight in model.named_parameters():
@@ -77,7 +82,7 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
             training_writer.add_histogram(f'{name}.grad', weight.grad, NUM_EPOCH)
         
         # evaluate    
-        val_loss, val_accuracy = evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, test_dataloader)
+        val_loss, val_accuracy = evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, test_dataloader, batch_size)
         # log summaries to validation_writer
         validation_writer.add_scalar('loss', val_loss, NUM_STEPS)
         validation_writer.add_scalar('accuracy', val_accuracy, NUM_STEPS)
