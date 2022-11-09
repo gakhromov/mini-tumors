@@ -2,6 +2,7 @@ from model.model import *
 from tqdm import tqdm
 from datetime import date
 import random
+import os
 
 # Keep track of the numbers of epochs executed so far
 
@@ -23,8 +24,8 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         loss = cross_entropy_loss(output, label)    # compute loss
         # loss.register_hook(lambda grad: print(grad))
         loss.backward() # backward pass
-        for name, param in model.named_parameters():
-            print(name, param.grad)
+        # for name, param in model.named_parameters():
+        #     print(name, param.grad)
         optimizer.step()    # perform update
 
         NUM_STEPS += 1
@@ -92,7 +93,10 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
 
         NUM_EPOCH += 1
     if save_path != "" : torch.save(model.state_dict(), save_path + "_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
-    else: torch.save(model.state_dict(), "./model_weights/model_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
+    else: 
+        if not os.path.exists("./model/model_weights"):
+            os.makedirs("./model/model_weights")
+        torch.save(model.state_dict(), "./model/model_weights/model_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
 
     training_writer.flush()
     validation_writer.flush()
