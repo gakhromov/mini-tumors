@@ -31,7 +31,7 @@ args = parser.parse_args()
 
 print("State :", args.state)
 
-train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets()
+train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets(img_size = args.img_size)
 
 #Size to be changed
 img_size = args.img_size
