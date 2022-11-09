@@ -31,7 +31,7 @@ class ConvNet(torch.nn.Module):
             self.convolutions.append(ConvolutionPoolLayer(in_channels, filter_size, out_channels, f'conv{i}_layer', activation))
             in_channels = out_channels
         #Fully Connected
-        self.fc = FullyConnectedLayer( int((img_size / 2**(len(filter_sizes)))**2 * out_channels), num_classes, 'dense_layer', activation=activation) #need to change 4096 in terms of the feature map and channel size
+        self.fc = FullyConnectedLayer( int(int(img_size / 2**(len(filter_sizes)))**2 * out_channels), num_classes, 'dense_layer', activation=activation)
 
     def get_probabilities(self, x):
         """
