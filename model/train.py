@@ -23,6 +23,8 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         loss = cross_entropy_loss(output, label)    # compute loss
         # loss.register_hook(lambda grad: print(grad))
         loss.backward() # backward pass
+        for name, param in model.named_parameters():
+            print(name, param.grad)
         optimizer.step()    # perform update
 
         NUM_STEPS += 1
@@ -68,7 +70,8 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
         
         # train model for one epoch
         train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS, batch_size)
-        
+        scheduler.step()
+
         for name, weight in model.named_parameters():
             # Attach a lot of summaries to training_writer for TensorBoard visualizations.
             training_writer.add_scalar(f'{name}.mean', torch.mean(weight), NUM_EPOCH)
