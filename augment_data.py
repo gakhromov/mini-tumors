@@ -9,12 +9,15 @@ import numpy as np
 import cv2
 from skimage.transform import resize
 from sklearn.model_selection import train_test_split
+from torchvision import transforms
 
 from data.data import Data
 from data import filters
 
 import json
 from tqdm import tqdm
+import torch
+
 
 class DataAugmentor:
     '''
@@ -58,18 +61,18 @@ class DataAugmentor:
 
             # Apply universal filters to image
             for filter in self.filters_1:
-                original_pic = filter.transform(original_pic)
+                original_pic = filter(original_pic)
 
             # Create additional copies of image
             pics = [original_pic]
             for filter in self.filters_2:
-                pics = pics + filter.transform(original_pic)
+                pics = pics + filter(original_pic)
 
             # For each of the several pics outputted by stage 2
             for pic in pics:
                 # Apply Random transformations to images
                 for filter in self.filters_3:
-                    pic = filter.transform(pic)
+                    pic = filter(pic)
 
                 # Write out image
                 np.save(f'{config.ROOT_PATH}/data/augmented/img{self.new_inx}.npy', pic)
@@ -94,10 +97,10 @@ class AugmentedData(Data):
         by indecies.
         '''
         if indecies == None:
-            self.labels = np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy')
+            self.labels = np.load(f'{ROOT_PATH}/data/augmented/labels.npy')
             self.indecies = range(len(self.labels))
         else:
-            self.labels = np.take(np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy'), indices=indecies)
+            self.labels = np.take(np.load(f'{ROOT_PATH}/data/augmented/labels.npy'), indices=indecies)
             self.indecies = indecies
 
         self.transform = transform
@@ -112,7 +115,7 @@ class AugmentedData(Data):
         # Get actual index
         ds_index = self.indecies[idx]
 
-        img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
+        img = np.load(f'{ROOT_PATH}/data/augmented/img{ds_index}.npy')
         img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
 
         if self.transform != None:
@@ -137,10 +140,24 @@ def create_split(test_transform = None, train_transform = None, test_percentage 
 
 
 if __name__ == '__main__':
+    ############### Dict of Implemented Filters ###############
+    torch_transforms = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
+    ])
+
+
+    stage1 = [filters.AdaptiveHistogramEqualization(), torch_transforms, filters.BlurFilter()]
+    stage2 = [filters.Reflections()]
+    stage3 = []
+    
+
     if not os.path.exists(f'{config.ROOT_PATH}/data/augmented'):
         os.makedirs(f'{config.ROOT_PATH}/data/augmented')
-        #da = DataAugmentor(filters.stage1, filters.stage2, filters.stage3)
-        da = DataAugmentor([],[],[])
+        da = DataAugmentor(stage1, stage2, stage3)
+        #da = DataAugmentor([],[],[])
         da.augment_data()
     else:
         print(f'ERROR: {config.ROOT_PATH}/data/augmented already exists. Perhaps the augmented dataset is already generated', file=sys.stderr)
