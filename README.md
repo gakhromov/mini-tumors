@@ -8,6 +8,22 @@ Data Science Lab 2022 Project - Mini-Tumors in Nanoliter-Droplets for Personaliz
 4. Install the dataset folder `TumorScoring` into the folder `/data`
 5. Run `pipenv run python prepare_dataset.py` to prepare the dataset for use
 
+## Setup (Data Augmentation)
+### Offline Data Augmentation
+To Run offline data augmentation and generate an augmented/transformed version of the dataset:
+
+1. Specify what transformations you would like to perform on each image in '~/data/samples' accoding to the figure below. Filters are performed as part of one of three stages. Filters in stage 1 and 3 are one to one mappings of input images to output. Filters in stage two map a single input image to one or mores. output images, each perturbed slightly differently.
+
+![Example Transformation Stages](https://i.imgur.com/JXZXueG.png)
+
+Specify what transformations you would like to perform on each image in '~/data/samples'. You can specify transformations by adding them to the '_ _ main _ _()' function in 'augment_data.py' in the appropriate variables. All filters/transformations
+specified should be callable objects that accept a single argument (input image) and return either a single image (stage 1 and 3) or a list of images (stage 2). If you would like to write your own transformation you can inherit the abstract classes specified in 'data/filters.py'. If one of the lists of stages is left empty, it will perform the identiy transformation.
+
+PS: If this feels overengineered, just leave stage2 and stage3 as emtpy lists and run the code.
+
+2. Augmented data can now be loaded with the 'AugmentedData' data class 'agument_data.py'. It's constructor takes two optional parameters. The first called 'labels' specifies a subset of the complete datasets indecies that the loader should load. This can be used to make test/train splits by providiing it with a random subsample of all indecies. The second specifies a transformation or composition of transformations for online data augmentation. These will be applied on each call to the '_ _ getitem _ _' method. 
+
+
 ## Running (local)
 1. ?
 
@@ -31,7 +47,7 @@ scp -r TumorScoring mbrassard@euler.ethz.ch:/cluster/home/mbrassard/mini-tumors/
 2. Type the command `module load gcc/8.2.0 python_gpu/3.10.4`. NOTE: you can avoid having to enter this command everytime you access the cluster by appending those lines (`module load gcc/8.2.0 python_gpu/3.10.4`) to the `.bashrc` file in your home directory on the cluster.
 3. In the cluster, navigate to the repo and type the following command (TEMPORARY COMMAND THAT PROBABLY DOESN'T WORK, WILL BE CHANGED)
 ```
-sbatch --gpus=1 --gpumem:8g --output="./job_output.txt" --wrap="pipenv run python main.py --n_epochs 10 --state 'train'"
+sbatch --gpus=1 --gpumem:8g --output="./job_output.txt" --wrap="pipenv run python .py --n_epochs 10 --state 'train'"
 ```
 
 ## Packages
