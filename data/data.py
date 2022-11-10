@@ -13,7 +13,7 @@ from data import config
 
 
 class Data:
-    def __init__(self, transform = None):
+    def __init__(self, transform = None, img_size = -1):
         '''
         transform -- pytorch transform or Composition of several transforms applied to each fetched item.
         '''
@@ -22,6 +22,7 @@ class Data:
             self.sample_list = json.load(f)
         
         self.transform = transform
+        self.img_size = img_size
 	
     def show_sample(self, sample_idx: int, channel: int = -1):
         if sample_idx >= len(self.sample_list):
@@ -69,20 +70,25 @@ class Data:
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
         # Not sure what is going wrong here, but the original doesn't work
-        img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
+
+        if self.img_size == -1:
+            img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
+        else:
+            img = resize(img, (img.shape[0], self.img_size, self.img_size), anti_aliasing=False)
 
         if self.transform != None:
             img = self.transform(img)
 
-        return img[0, :, :], self.labels[idx, 1]
+        return torch.tensor(np.array([img[img.shape[0]-1, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
 
 
 def load_datasets(
     batch_size = 64, 
+    img_size = -1
 ):  
     # for now, train dataset = test
 
-    dataset = Data()
+    dataset = Data(img_size = img_size)
 
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
     

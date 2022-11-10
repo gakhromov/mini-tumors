@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import numpy as np
 import nd2
+from nd2reader import ND2Reader
 import json
 from tqdm import tqdm
 
@@ -88,7 +89,10 @@ def create_splits_with_labels(
         # quit if we have no labels
         return
 
-    img = nd2.imread(sample_list[sample_idx]['img_path'])
+    # img = nd2.imread(sample_list[sample_idx]['img_path'])
+    img = ND2Reader(sample_list[sample_idx]['img_path'])
+    img.iter_axes = 'c'
+    img = np.array(img)
     
     splits = []
     for droplet in feats.index:

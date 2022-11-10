@@ -19,6 +19,8 @@ import cv2
 import numpy as np
 from torchvision import transforms
 
+# Abstract parent classes for filters to inherit from
+
 class Filter(ABC):
     '''
     Abstract parent class for data augmentation filter.
