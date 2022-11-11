@@ -61,6 +61,9 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
     total_loss, total_accuracy = 0., 0.
     with torch.no_grad():
         for i, (image, label) in enumerate(tqdm(val_dataloader)):
+            for j in range(image.shape[0]):
+                image[j] -= image[j].min(1, keepdim=True)[0]
+                image[j] /= image[j].max(1, keepdim=True)[0]
             image, label = image.to(device), label.to(device) # put the data on the selected execution device
             output = model(image)  # forward pass
             loss = cross_entropy_loss(output, label)    # compute loss
@@ -72,7 +75,7 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
 
     return total_loss, total_accuracy
 
-def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer, batch_size):
+def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, batch_size):
     """
     Train and evaluate model.
     """
@@ -80,23 +83,24 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
     for epoch in range(n_epochs):
         
         # train model for one epoch
-        train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS, batch_size)
+        train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, NUM_STEPS, batch_size)
         scheduler.step()
 
-        for name, weight in model.named_parameters():
-            # Attach a lot of summaries to training_writer for TensorBoard visualizations.
-            training_writer.add_scalar(f'{name}.mean', torch.mean(weight), NUM_EPOCH)
-            training_writer.add_scalar(f'{name}.std_dev', torch.std(weight), NUM_EPOCH)
-            training_writer.add_scalar(f'{name}.max', torch.max(weight), NUM_EPOCH)
-            training_writer.add_scalar(f'{name}.min', torch.min(weight), NUM_EPOCH)
-            training_writer.add_histogram(f'{name}.weights', weight, NUM_EPOCH)
-            training_writer.add_histogram(f'{name}.grad', weight.grad, NUM_EPOCH)
+        # for name, weight in model.named_parameters():
+        #     wandb.log({str(name) + ".mean": torch.mean(weight), 
+        #                 str(name) + ".std_dev": torch.std(weight),
+        #                 str(name) + ".max": torch.max(weight),
+        #                 str(name) + ".min": torch.min(weight),
+        #                 str(name) + ".weights": weight,
+        #                 str(name) + ".grad": weight.grad,
+        #                 "epochs": NUM_EPOCH
+        #     })
         
         # evaluate    
         val_loss, val_accuracy = evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, test_dataloader, batch_size)
-        # log summaries to validation_writer
-        validation_writer.add_scalar('loss', val_loss, NUM_STEPS)
-        validation_writer.add_scalar('accuracy', val_accuracy, NUM_STEPS)
+        wandb.log({"validation":{'val_loss': val_loss,
+                    'val_accuracy': val_accuracy
+        }}, step=NUM_EPOCH)
 
         print(f"[Epoch {NUM_EPOCH}] - Training : accuracy = {train_accuracy}, loss = {train_loss}", end=" ")
         print(f"Validation : accuracy = {val_accuracy}, loss = {val_loss}")

@@ -3,3 +3,4 @@ augmented/
 augmented/*
 archive/
 wandb/
+model_weights/
