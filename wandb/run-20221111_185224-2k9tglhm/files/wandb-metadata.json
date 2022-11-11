@@ -1,0 +1,35 @@
+{
+    "os": "macOS-12.6-arm64-i386-64bit",
+    "python": "3.9.9",
+    "heartbeatAt": "2022-11-11T17:52:25.390494",
+    "startedAt": "2022-11-11T17:52:24.891553",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--state",
+        "train",
+        "--n_epochs",
+        "100"
+    ],
+    "state": "running",
+    "program": "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "https://github.com/gakhromov/mini-tumors.git",
+        "commit": "1ce6f0ad9b13325bd925bc9780e620e8ab6ab83b"
+    },
+    "email": "acollette@student.ethz.ch",
+    "root": "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors",
+    "host": "Arthurs-MBP",
+    "username": "arthur",
+    "executable": "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 8,
+    "disk": {
+        "total": 228.27386474609375,
+        "used": 14.355201721191406
+    },
+    "memory": {
+        "total": 16.0
+    }
+}

@@ -98,7 +98,7 @@ def load_datasets(
     
     if use_sampler:
         sampler_train = sampler(train_dataset)
-        train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, sampler=sampler)
+        train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, sampler=sampler_train)
     else:
         train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)

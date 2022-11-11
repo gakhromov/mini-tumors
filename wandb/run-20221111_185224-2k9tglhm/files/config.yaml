@@ -8,13 +8,9 @@ _wandb:
     is_jupyter_run: false
     is_kaggle_kernel: false
     python_version: 3.9.9
-    start_time: 1668189082.208177
+    start_time: 1668189144.908377
     t:
       1:
-      - 1
-      - 41
-      - 55
-      2:
       - 1
       - 41
       - 55

@@ -1,0 +1,25 @@
+
+State : train
+Device : cpu
+Total number of total parameters: 205974
+Number of trainable parameters: 205974
+Adjusting learning rate of group 0 to 1.0000e-03.
+0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/main.py", line 91, in <module>
+    train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler,  args.n_epochs, train_dataloader, test_dataloader, args.save_path, NUM_EPOCH, NUM_STEPS, args.batch_size)
+  File "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/model/train.py", line 86, in train
+    train_loss, train_accuracy = train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, NUM_STEPS, batch_size)
+  File "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/model/train.py", line 20, in train_step
+    for i, (image, label) in enumerate(tqdm(train_dataloader)):
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/tqdm/std.py", line 1195, in __iter__
+    for obj in iterable:
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 530, in __next__
+    data = self._next_data()
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 569, in _next_data
+    index = self._next_index()  # may raise StopIteration
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/utils/data/dataloader.py", line 521, in _next_index
+    return next(self._sampler_iter)  # may raise StopIteration
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/utils/data/sampler.py", line 226, in __iter__
+    for idx in self.sampler:
+TypeError: 'function' object is not iterable

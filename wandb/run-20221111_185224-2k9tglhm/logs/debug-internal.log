@@ -1,0 +1,42 @@
+2022-11-11 18:52:24,930 INFO    StreamThr :71730 [internal.py:wandb_internal():88] W&B internal server running at pid: 71730, started at: 2022-11-11 18:52:24.928602
+2022-11-11 18:52:24,931 DEBUG   HandlerThread:71730 [handler.py:handle_request():139] handle_request: status
+2022-11-11 18:52:24,933 DEBUG   SenderThread:71730 [sender.py:send_request():317] send_request: status
+2022-11-11 18:52:24,934 INFO    WriterThread:71730 [datastore.py:open_for_write():75] open: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/run-2k9tglhm.wandb
+2022-11-11 18:52:24,935 DEBUG   SenderThread:71730 [sender.py:send():303] send: header
+2022-11-11 18:52:24,935 DEBUG   SenderThread:71730 [sender.py:send():303] send: run
+2022-11-11 18:52:25,311 DEBUG   HandlerThread:71730 [handler.py:handle_request():139] handle_request: check_version
+2022-11-11 18:52:25,311 INFO    SenderThread:71730 [dir_watcher.py:__init__():216] watching files in: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/files
+2022-11-11 18:52:25,311 INFO    SenderThread:71730 [sender.py:_start_run_threads():928] run started: 2k9tglhm with start time 1668189144.908377
+2022-11-11 18:52:25,311 DEBUG   SenderThread:71730 [sender.py:send():303] send: summary
+2022-11-11 18:52:25,312 INFO    SenderThread:71730 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-11 18:52:25,312 DEBUG   SenderThread:71730 [sender.py:send_request():317] send_request: check_version
+2022-11-11 18:52:25,382 DEBUG   HandlerThread:71730 [handler.py:handle_request():139] handle_request: run_start
+2022-11-11 18:52:25,389 DEBUG   HandlerThread:71730 [system_info.py:__init__():31] System info init
+2022-11-11 18:52:25,389 DEBUG   HandlerThread:71730 [system_info.py:__init__():46] System info init done
+2022-11-11 18:52:25,389 INFO    HandlerThread:71730 [system_monitor.py:start():150] Starting system monitor
+2022-11-11 18:52:25,389 INFO    SystemMonitor:71730 [system_monitor.py:_start():116] Starting system asset monitoring threads
+2022-11-11 18:52:25,389 INFO    HandlerThread:71730 [system_monitor.py:probe():168] Collecting system info
+2022-11-11 18:52:25,390 INFO    SystemMonitor:71730 [interfaces.py:start():168] Started cpu
+2022-11-11 18:52:25,390 INFO    SystemMonitor:71730 [interfaces.py:start():168] Started disk
+2022-11-11 18:52:25,390 DEBUG   HandlerThread:71730 [system_info.py:probe():195] Probing system
+2022-11-11 18:52:25,390 INFO    SystemMonitor:71730 [interfaces.py:start():168] Started memory
+2022-11-11 18:52:25,390 INFO    SystemMonitor:71730 [interfaces.py:start():168] Started network
+2022-11-11 18:52:25,393 DEBUG   HandlerThread:71730 [system_info.py:_probe_git():180] Probing git
+2022-11-11 18:52:25,404 DEBUG   HandlerThread:71730 [system_info.py:_probe_git():188] Probing git done
+2022-11-11 18:52:25,405 DEBUG   HandlerThread:71730 [system_info.py:probe():241] Probing system done
+2022-11-11 18:52:25,405 DEBUG   HandlerThread:71730 [system_monitor.py:probe():177] {'os': 'macOS-12.6-arm64-i386-64bit', 'python': '3.9.9', 'heartbeatAt': '2022-11-11T17:52:25.390494', 'startedAt': '2022-11-11T17:52:24.891553', 'docker': None, 'cuda': None, 'args': ('--state', 'train', '--n_epochs', '100'), 'state': 'running', 'program': '/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/main.py', 'codePath': 'main.py', 'git': {'remote': 'https://github.com/gakhromov/mini-tumors.git', 'commit': '1ce6f0ad9b13325bd925bc9780e620e8ab6ab83b'}, 'email': 'acollette@student.ethz.ch', 'root': '/Users/arthur/Documents/ETH/DS_Lab/mini-tumors', 'host': 'Arthurs-MBP', 'username': 'arthur', 'executable': '/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/bin/python', 'cpu_count': 8, 'cpu_count_logical': 8, 'disk': {'total': 228.27386474609375, 'used': 14.355201721191406}, 'memory': {'total': 16.0}}
+2022-11-11 18:52:25,405 INFO    HandlerThread:71730 [system_monitor.py:probe():178] Finished collecting system info
+2022-11-11 18:52:25,405 INFO    HandlerThread:71730 [system_monitor.py:probe():181] Publishing system info
+2022-11-11 18:52:25,405 DEBUG   HandlerThread:71730 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2022-11-11 18:52:25,405 DEBUG   HandlerThread:71730 [system_info.py:_save_pip():67] Saving pip packages done
+2022-11-11 18:52:25,406 INFO    HandlerThread:71730 [system_monitor.py:probe():183] Finished publishing system info
+2022-11-11 18:52:25,454 DEBUG   SenderThread:71730 [sender.py:send():303] send: files
+2022-11-11 18:52:25,454 INFO    SenderThread:71730 [sender.py:_save_file():1171] saving file wandb-metadata.json with policy now
+2022-11-11 18:52:25,457 DEBUG   HandlerThread:71730 [handler.py:handle_request():139] handle_request: stop_status
+2022-11-11 18:52:25,457 DEBUG   SenderThread:71730 [sender.py:send_request():317] send_request: stop_status
+2022-11-11 18:52:25,613 DEBUG   SenderThread:71730 [sender.py:send():303] send: telemetry
+2022-11-11 18:52:26,131 INFO    Thread-16 :71730 [upload_job.py:push():143] Uploaded file /var/folders/4f/f18zwngx67d1kts3kmwm41y00000gn/T/tmpbhbuank8wandb/145frixs-wandb-metadata.json
+2022-11-11 18:52:26,316 INFO    Thread-13 :71730 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/files/requirements.txt
+2022-11-11 18:52:26,317 INFO    Thread-13 :71730 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/files/wandb-metadata.json
+2022-11-11 18:52:26,317 INFO    Thread-13 :71730 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/files/wandb-summary.json
+2022-11-11 18:52:26,317 INFO    Thread-13 :71730 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185224-2k9tglhm/files/output.log

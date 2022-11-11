@@ -40,3 +40,131 @@
 2022-11-11 18:51:23,632 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-summary.json
 2022-11-11 18:51:23,632 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-metadata.json
 2022-11-11 18:51:23,632 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_created():275] file/dir created: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log
+2022-11-11 18:51:25,639 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log
+2022-11-11 18:51:37,965 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: stop_status
+2022-11-11 18:51:37,966 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: stop_status
+2022-11-11 18:51:53,142 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: stop_status
+2022-11-11 18:51:53,142 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: stop_status
+2022-11-11 18:51:53,741 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/config.yaml
+2022-11-11 18:51:56,077 DEBUG   SenderThread:71598 [sender.py:send():303] send: exit
+2022-11-11 18:51:56,077 INFO    SenderThread:71598 [sender.py:send_exit():442] handling exit code: 1
+2022-11-11 18:51:56,077 INFO    SenderThread:71598 [sender.py:send_exit():444] handling runtime: 33
+2022-11-11 18:51:56,078 INFO    SenderThread:71598 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-11 18:51:56,078 INFO    SenderThread:71598 [sender.py:send_exit():450] send defer
+2022-11-11 18:51:56,078 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,078 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 0
+2022-11-11 18:51:56,079 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,079 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 0
+2022-11-11 18:51:56,079 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 1
+2022-11-11 18:51:56,079 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,079 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 1
+2022-11-11 18:51:56,079 INFO    HandlerThread:71598 [system_monitor.py:finish():160] Stopping system monitor
+2022-11-11 18:51:56,088 DEBUG   SystemMonitor:71598 [system_monitor.py:_start():130] Starting system metrics aggregation loop
+2022-11-11 18:51:56,088 INFO    HandlerThread:71598 [interfaces.py:finish():173] Joined cpu
+2022-11-11 18:51:56,088 DEBUG   SystemMonitor:71598 [system_monitor.py:_start():137] Finished system metrics aggregation loop
+2022-11-11 18:51:56,088 DEBUG   SystemMonitor:71598 [system_monitor.py:_start():141] Publishing last batch of metrics
+2022-11-11 18:51:56,088 INFO    HandlerThread:71598 [interfaces.py:finish():173] Joined disk
+2022-11-11 18:51:56,089 INFO    HandlerThread:71598 [interfaces.py:finish():173] Joined memory
+2022-11-11 18:51:56,089 INFO    HandlerThread:71598 [interfaces.py:finish():173] Joined network
+2022-11-11 18:51:56,089 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,089 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 1
+2022-11-11 18:51:56,089 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 2
+2022-11-11 18:51:56,089 DEBUG   SenderThread:71598 [sender.py:send():303] send: stats
+2022-11-11 18:51:56,090 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,090 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 2
+2022-11-11 18:51:56,090 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,090 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 2
+2022-11-11 18:51:56,090 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 3
+2022-11-11 18:51:56,090 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,090 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 3
+2022-11-11 18:51:56,090 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,090 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 3
+2022-11-11 18:51:56,090 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 4
+2022-11-11 18:51:56,090 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,090 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 4
+2022-11-11 18:51:56,090 DEBUG   SenderThread:71598 [sender.py:send():303] send: summary
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:_save_file():1171] saving file wandb-summary.json with policy end
+2022-11-11 18:51:56,091 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 4
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 5
+2022-11-11 18:51:56,091 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,091 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 5
+2022-11-11 18:51:56,091 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 5
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 6
+2022-11-11 18:51:56,091 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:56,091 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 6
+2022-11-11 18:51:56,091 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:56,091 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 6
+2022-11-11 18:51:56,757 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-summary.json
+2022-11-11 18:51:57,081 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-11 18:51:57,758 INFO    Thread-13 :71598 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log
+2022-11-11 18:51:58,077 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 7
+2022-11-11 18:51:58,077 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: poll_exit
+2022-11-11 18:51:58,078 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:58,078 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 7
+2022-11-11 18:51:58,078 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:58,078 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 7
+2022-11-11 18:51:58,078 INFO    SenderThread:71598 [dir_watcher.py:finish():362] shutting down directory watcher
+2022-11-11 18:51:58,084 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-11 18:51:58,763 INFO    SenderThread:71598 [dir_watcher.py:_on_file_modified():292] file/dir modified: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log
+2022-11-11 18:51:58,764 INFO    SenderThread:71598 [dir_watcher.py:finish():392] scan: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files
+2022-11-11 18:51:58,765 INFO    SenderThread:71598 [dir_watcher.py:finish():406] scan save: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/requirements.txt requirements.txt
+2022-11-11 18:51:58,765 INFO    SenderThread:71598 [dir_watcher.py:finish():406] scan save: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log output.log
+2022-11-11 18:51:58,771 INFO    SenderThread:71598 [dir_watcher.py:finish():406] scan save: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/config.yaml config.yaml
+2022-11-11 18:51:58,772 INFO    SenderThread:71598 [dir_watcher.py:finish():406] scan save: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-summary.json wandb-summary.json
+2022-11-11 18:51:58,778 INFO    SenderThread:71598 [dir_watcher.py:finish():406] scan save: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-metadata.json wandb-metadata.json
+2022-11-11 18:51:58,779 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 8
+2022-11-11 18:51:58,780 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: poll_exit
+2022-11-11 18:51:58,784 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:58,785 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 8
+2022-11-11 18:51:58,785 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:58,785 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 8
+2022-11-11 18:51:58,785 INFO    SenderThread:71598 [file_pusher.py:finish():168] shutting down file pusher
+2022-11-11 18:51:59,089 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-11 18:51:59,089 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: poll_exit
+2022-11-11 18:51:59,296 INFO    Thread-17 :71598 [upload_job.py:push():143] Uploaded file /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/requirements.txt
+2022-11-11 18:51:59,299 INFO    Thread-18 :71598 [upload_job.py:push():143] Uploaded file /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/output.log
+2022-11-11 18:51:59,308 INFO    Thread-19 :71598 [upload_job.py:push():143] Uploaded file /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/config.yaml
+2022-11-11 18:51:59,316 INFO    Thread-20 :71598 [upload_job.py:push():143] Uploaded file /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/files/wandb-summary.json
+2022-11-11 18:51:59,516 INFO    Thread-12 :71598 [sender.py:transition_state():463] send defer: 9
+2022-11-11 18:51:59,517 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:59,517 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 9
+2022-11-11 18:51:59,517 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:59,517 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 9
+2022-11-11 18:51:59,517 INFO    SenderThread:71598 [file_pusher.py:join():173] waiting for file pusher
+2022-11-11 18:51:59,517 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 10
+2022-11-11 18:51:59,518 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:59,518 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 10
+2022-11-11 18:51:59,518 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:59,518 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 10
+2022-11-11 18:51:59,781 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 11
+2022-11-11 18:51:59,781 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:59,781 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 11
+2022-11-11 18:51:59,782 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:59,782 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 11
+2022-11-11 18:51:59,782 INFO    SenderThread:71598 [sender.py:transition_state():463] send defer: 12
+2022-11-11 18:51:59,782 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: defer
+2022-11-11 18:51:59,782 DEBUG   SenderThread:71598 [sender.py:send():303] send: final
+2022-11-11 18:51:59,782 INFO    HandlerThread:71598 [handler.py:handle_request_defer():162] handle defer: 12
+2022-11-11 18:51:59,782 DEBUG   SenderThread:71598 [sender.py:send():303] send: footer
+2022-11-11 18:51:59,782 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: defer
+2022-11-11 18:51:59,782 INFO    SenderThread:71598 [sender.py:send_request_defer():459] handle sender defer: 12
+2022-11-11 18:51:59,783 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-11 18:51:59,783 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: poll_exit
+2022-11-11 18:51:59,784 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: poll_exit
+2022-11-11 18:51:59,785 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: server_info
+2022-11-11 18:51:59,785 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: poll_exit
+2022-11-11 18:51:59,785 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: get_summary
+2022-11-11 18:51:59,785 DEBUG   SenderThread:71598 [sender.py:send_request():317] send_request: server_info
+2022-11-11 18:51:59,785 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: sampled_history
+2022-11-11 18:52:00,116 INFO    MainThread:71598 [wandb_run.py:_footer_history_summary_info():3377] rendering history
+2022-11-11 18:52:00,117 INFO    MainThread:71598 [wandb_run.py:_footer_history_summary_info():3409] rendering summary
+2022-11-11 18:52:00,117 INFO    MainThread:71598 [wandb_run.py:_footer_sync_info():3333] logging synced files
+2022-11-11 18:52:00,118 DEBUG   HandlerThread:71598 [handler.py:handle_request():139] handle_request: shutdown
+2022-11-11 18:52:00,118 INFO    HandlerThread:71598 [handler.py:finish():814] shutting down handler
+2022-11-11 18:52:00,788 INFO    WriterThread:71598 [datastore.py:close():279] close: /Users/arthur/Documents/ETH/DS_Lab/mini-tumors/wandb/run-20221111_185122-1m8pqmlc/run-1m8pqmlc.wandb
+2022-11-11 18:52:01,116 INFO    SenderThread:71598 [sender.py:finish():1331] shutting down sender
+2022-11-11 18:52:01,116 INFO    SenderThread:71598 [file_pusher.py:finish():168] shutting down file pusher
+2022-11-11 18:52:01,117 INFO    SenderThread:71598 [file_pusher.py:join():173] waiting for file pusher
+2022-11-11 18:52:01,509 INFO    MainThread:71598 [internal.py:handle_exit():78] Internal process exited
