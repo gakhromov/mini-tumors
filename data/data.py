@@ -19,7 +19,9 @@ class Data:
         '''
         self.labels = np.load(f'{config.ROOT_PATH}/data/clean/labels.npy')
         with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
-            self.sample_list = json.load(f)
+            self.sample_list = json.load(f)['samples']
+        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'r') as f:
+            self.droplet_list = json.load(f)['droplets']
         
         self.transform = transform
         self.img_size = img_size

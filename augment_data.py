@@ -138,19 +138,15 @@ def create_split(test_transform = None, train_transform = None, test_percentage 
     return train_data, test_data
 
 
-
 if __name__ == '__main__':
-    ############### Dict of Implemented Filters ###############
-    torch_transforms = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Lambda(lambda x: torch.cat([x, x, x], 0)),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                         std=[0.229, 0.224, 0.225])
-    ])
 
+    '''
+    This is currently what the other team claims to have done. I/E Normalize data and center crop
+    # TODO: Normalization
+    '''
 
-    stage1 = [filters.AdaptiveHistogramEqualization(), torch_transforms, filters.BlurFilter()]
-    stage2 = [filters.Reflections()]
+    stage1 = [transforms.ToTensor(), transforms.CenterCrop(config.IMG_SIZE)  ]# transforms.Normalize(mean, std, inplace=False) ]
+    stage2 = []
     stage3 = []
     
 
