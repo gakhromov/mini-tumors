@@ -2,7 +2,7 @@ import os
 
 DATASETS = [
     "ColonCancer", 
-    #"BrainCancer",
+    # "BrainCancer",
 ]
 
 IMG_SIZE = (64, 64)
