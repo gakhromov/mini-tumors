@@ -1,9 +1,6 @@
 import argparse
 from torchsummary import summary
 
-# for the tensorboard summary writers
-from torch.utils.tensorboard import SummaryWriter
-
 #from layers_basic import *
 from model.model import *
 from model.train import *
@@ -15,14 +12,14 @@ parser.add_argument("--img_size", type=int, default=64)
 
 parser.add_argument("--state", type=str, default="idle") #train, test
 
-parser.add_argument("--learning_rate", type=float, default=1e-5)
+parser.add_argument("--learning_rate", type=float, default=1e-3)
 parser.add_argument("--n_epochs", type=int, default=0)
 
 parser.add_argument("--num_image_channels", type=int, default=1)
 parser.add_argument("--num_classes", type=int, default=4)
 parser.add_argument("--batch_size", type=int, default=64)
-parser.add_argument("--feature_map_sizes", type=list, default=[32, 64, 128, 256])
-parser.add_argument("--filter_sizes", type=list, default=[3, 3, 3, 3])
+parser.add_argument("--feature_map_sizes", type=list, default=[64, 64, 64])
+parser.add_argument("--filter_sizes", type=list, default=[3, 3, 3])
 
 parser.add_argument("--model_path", type=str, default="")
 parser.add_argument("--save_path", type=str, default="")
@@ -46,10 +43,6 @@ num_classes = args.num_classes
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"Device : {device}")
-
-# Tensorboard
-training_writer = SummaryWriter("./tensorboard/train")
-validation_writer = SummaryWriter("./tensorboard/valid")
 
 batch_size = args.batch_size
 
@@ -95,9 +88,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.9, verbose=True)
 
 if args.state == "train":
-    train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler,  args.n_epochs, train_dataloader, test_dataloader, args.save_path, NUM_EPOCH, NUM_STEPS, training_writer, validation_writer, args.batch_size)
+    train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler,  args.n_epochs, train_dataloader, test_dataloader, args.save_path, NUM_EPOCH, NUM_STEPS, args.batch_size)
 
 #Not a real test just to check some results
 if args.state == "test":
-    test_loss, test_accuracy = evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, test_dataloader, validation_writer)
+    test_loss, test_accuracy = evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, test_dataloader)
     print(f"Validation : accuracy = {test_accuracy}, loss = {test_loss}")

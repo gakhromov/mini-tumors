@@ -3,17 +3,24 @@ from tqdm import tqdm
 from datetime import date
 import random
 import os
+import wandb
+
+#wandb.init(entity="titty-twisters", project="my-test-project")
+wandb.init(project="my-test-project")
 
 # Keep track of the numbers of epochs executed so far
 
-def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, training_writer, NUM_STEPS, batch_size):
+def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, train_dataloader, NUM_STEPS, batch_size):
     """
     Train model for 1 epoch.
     """
     model.train()
     total_loss, total_accuracy = 0., 0.
+    temp = random.randint(0,10)
     for i, (image, label) in enumerate(tqdm(train_dataloader)):
-
+        for j in range(image.shape[0]):
+            image[j] -= image[j].min(1, keepdim=True)[0]
+            image[j] /= image[j].max(1, keepdim=True)[0]
         image, label = image.to(device), label.to(device) # put the data on the selected execution device
         optimizer.zero_grad()   # zero the parameter gradients
         output = model(image)  # forward pass
@@ -22,7 +29,7 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         #     print("output_raw", output)
         #     print("label", label)
         loss = cross_entropy_loss(output, label)    # compute loss
-        # loss.register_hook(lambda grad: print(grad))
+        total_loss += loss.item()
         loss.backward() # backward pass
         # for name, param in model.named_parameters():
         #     print(name, param.grad)
@@ -30,12 +37,15 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
 
         NUM_STEPS += 1
 
-        training_writer.add_scalar('loss', loss.item(), NUM_STEPS)
-        total_loss += loss.item()
-
         train_accuracy = (torch.argmax(output, dim=1) == label).float().sum() / len(label) #get the accuracy for the batch
-        training_writer.add_scalar('accuracy', train_accuracy, NUM_STEPS)
-        total_accuracy += (torch.argmax(output, dim=1) == label).float().sum()
+        total_accuracy += train_accuracy
+
+        wandb.log({"training":{"loss": loss.item(),
+                    "training_accuracy": (torch.argmax(output, dim=1) == label).float().sum() / len(label),
+                    "inputs": wandb.Image(image[0][0]),
+                    "logits": wandb.Html(str(torch.argmax(output, dim=1))),
+                    "label": wandb.Html(str(label))
+        }}, step=NUM_STEPS)
     
     total_loss /= len(train_dataloader)
     total_accuracy /= (len(train_dataloader)*batch_size)
@@ -98,5 +108,3 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
             os.makedirs("./model/model_weights")
         torch.save(model.state_dict(), "./model/model_weights/model_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
 
-    training_writer.flush()
-    validation_writer.flush()
