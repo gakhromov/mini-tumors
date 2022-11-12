@@ -96,11 +96,11 @@ class AugmentedData(Data):
         If indecies is None load entire augmented dataset. Else, load subset of the dataset indexed
         by indecies.
         '''
-        if indecies == None:
-            self.labels = np.load(f'{ROOT_PATH}/data/augmented/labels.npy')
+        if indecies is None:
+            self.labels = np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy')
             self.indecies = range(len(self.labels))
         else:
-            self.labels = np.take(np.load(f'{ROOT_PATH}/data/augmented/labels.npy'), indices=indecies)
+            self.labels = np.take(np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy'), indices=indecies)
             self.indecies = indecies
 
         self.transform = transform
@@ -115,7 +115,7 @@ class AugmentedData(Data):
         # Get actual index
         ds_index = self.indecies[idx]
 
-        img = np.load(f'{ROOT_PATH}/data/augmented/img{ds_index}.npy')
+        img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
         img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
 
         if self.transform != None:
