@@ -1,0 +1,5 @@
+State : idle
+Device : cpu
+Total number of total parameters: 205974
+Number of trainable parameters: 205974
+Adjusting learning rate of group 0 to 1.0000e-03.

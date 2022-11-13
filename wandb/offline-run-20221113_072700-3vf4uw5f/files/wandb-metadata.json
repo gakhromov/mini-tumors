@@ -1,0 +1,24 @@
+{
+    "os": "Windows-10-10.0.19044-SP0",
+    "python": "3.9.13",
+    "heartbeatAt": "2022-11-13T06:27:02.668681",
+    "startedAt": "2022-11-13T06:27:00.176706",
+    "docker": null,
+    "gpu": "NVIDIA GeForce GTX 1650",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:\\Users\\Haruki Personal\\Desktop\\mini-tumors\\main.py",
+    "codePath": "main.py",
+    "git": {
+        "remote": "git@github.com:gakhromov/mini-tumors.git",
+        "commit": "3ac0ae56bc40e97df66d5fd385d69112d840e8fe"
+    },
+    "email": "haruki.shirakami.skype@gmail.com",
+    "root": "C:/Users/Haruki Personal/Desktop/mini-tumors",
+    "host": "LAPTOP-NQ6N8B8T",
+    "username": "Haruki Personal",
+    "executable": "C:\\Users\\Haruki Personal\\.virtualenvs\\mini-tumors-o66VGaUb\\Scripts\\python.exe"
+}
