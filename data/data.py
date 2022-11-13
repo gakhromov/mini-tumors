@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 from data import config
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class Data:
     def __init__(self, transform = None, img_size = -1):
@@ -81,8 +82,12 @@ class Data:
         if self.transform != None:
             img = self.transform(img)
 
-        return torch.tensor(np.array([img[img.shape[0]-1, :, :]])), torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        return torch.tensor(np.array([img[img.shape[0]-1, :, :]]), dtype=torch.float32).repeat(3, 1, 1), torch.tensor(self.labels[idx, 1], dtype=torch.long)
 
+class Norm:
+    def __call__(self, img):
+        img /= img.max()
+        return img
 
 def load_datasets(
     batch_size = 64, 
@@ -90,7 +95,7 @@ def load_datasets(
 ):  
     # for now, train dataset = test
 
-    dataset = Data(img_size = img_size)
+    dataset = Data(transform = Norm(), img_size = img_size)
 
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
     
