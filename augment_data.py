@@ -55,9 +55,11 @@ class DataAugmentor:
             # Read in example
             original_pic, lab = self.clean_data.__getitem__(ind)
 
+            # Shape 1 64 64
+
             # Normalize / convert to CV2 grayscale image
             # Assumption: Image is floats from 0 to 1
-            original_pic = np.array(original_pic * 255, dtype = np.uint8)
+            # original_pic = np.array(np.array(original_pic) * 255, dtype = np.uint8)
 
             # Apply universal filters to image
             for filter in self.filters_1:
@@ -139,22 +141,18 @@ def create_split(test_transform = None, train_transform = None, test_percentage 
 
 
 if __name__ == '__main__':
-
     '''
     This is currently what the other team claims to have done. I/E Normalize data and center crop
     # TODO: Normalization
     '''
 
-    stage1 = [transforms.ToTensor(), transforms.CenterCrop(config.IMG_SIZE)  ]# transforms.Normalize(mean, std, inplace=False) ]
+    stage1 = [transforms.CenterCrop(config.IMG_SIZE), transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
     stage2 = []
     stage3 = []
-    
 
     if not os.path.exists(f'{config.ROOT_PATH}/data/augmented'):
         os.makedirs(f'{config.ROOT_PATH}/data/augmented')
         da = DataAugmentor(stage1, stage2, stage3)
-        #da = DataAugmentor([],[],[])
         da.augment_data()
     else:
         print(f'ERROR: {config.ROOT_PATH}/data/augmented already exists. Perhaps the augmented dataset is already generated', file=sys.stderr)
-
