@@ -38,7 +38,7 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         NUM_STEPS += 1
 
         train_accuracy = (torch.argmax(output, dim=1) == label).float().sum() / len(label) #get the accuracy for the batch
-        total_accuracy += train_accuracy
+        total_accuracy += (torch.argmax(output, dim=1) == label).float().sum()
 
         wandb.log({"training":{"loss": loss.item(),
                     "training_accuracy": (torch.argmax(output, dim=1) == label).float().sum() / len(label),

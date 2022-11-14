@@ -55,7 +55,7 @@ filter_sizes = args.filter_sizes
 model = ConvNet(feature_map_sizes, filter_sizes, num_classes, img_size, activation=torch.nn.LeakyReLU()).double()
 model = model.to(device)
 if args.model_path != "": 
-    model.load_state_dict(torch.load("./model_weights/" + args.model_path, map_location=device))
+    model.load_state_dict(torch.load("./model/model_weights/" + args.model_path, map_location=device))
     temp = args.model_path.split("_")
     NUM_EPOCH = int(temp[-1].split(".")[0])
     NUM_STEPS = int(temp[-2].split(".")[0])

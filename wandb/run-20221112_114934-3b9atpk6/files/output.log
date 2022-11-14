@@ -1,0 +1,13 @@
+
+State : train
+Device : cpu
+Traceback (most recent call last):
+  File "/Users/arthur/Documents/ETH/DS_Lab/mini-tumors/main.py", line 58, in <module>
+    model.load_state_dict(torch.load("./model_weights/" + args.model_path, map_location=device))
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/serialization.py", line 699, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/serialization.py", line 231, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/Users/arthur/.local/share/virtualenvs/mini-tumors-fejtszlx/lib/python3.9/site-packages/torch/serialization.py", line 212, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: './model_weights/model_2022-11-11_0_100.pt'
