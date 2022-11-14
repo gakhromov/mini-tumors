@@ -2,6 +2,7 @@
 Offline augmentation.
 Read in clean data from $PROJECT/data/clean/ and write augmented version of dataset to $PROJECT/data/augmented/.
 '''
+
 import os
 from data import config
 import sys
@@ -93,11 +94,12 @@ class AugmentedData(Data):
     '''
     Seperate data loader for Augmented data.
     '''
-    def __init__(self, transform = None, indecies = None):
+    def __init__(self, transform = None, indecies = None, resize = True):
         '''
         If indecies is None load entire augmented dataset. Else, load subset of the dataset indexed
         by indecies.
         '''
+        self.resize = resize
         if indecies is None:
             self.labels = np.load(f'{config.ROOT_PATH}/data/augmented/labels.npy')
             self.indecies = range(len(self.labels))
@@ -118,7 +120,9 @@ class AugmentedData(Data):
         ds_index = self.indecies[idx]
 
         img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
-        img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
+        if self.resize == True:
+            print('Complaint: resizing already done once, impossible to upscale beyond current config.')
+            img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
 
         if self.transform != None:
             img = self.transform(img)
