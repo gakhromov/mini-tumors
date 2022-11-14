@@ -1,6 +1,7 @@
 from model.model import *
 from tqdm import tqdm
 from datetime import date
+from model.save import save_checkpoint
 import random
 import os
 import wandb
@@ -106,9 +107,30 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
         print(f"Validation : accuracy = {val_accuracy}, loss = {val_loss}")
 
         NUM_EPOCH += 1
-    if save_path != "" : torch.save(model.state_dict(), save_path + "_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
+
+    is_best = False #TODO implement is best
+
+    if save_path != "" : 
+        
+        torch.save(model.state_dict(), save_path + "_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
+        
+        save_checkpoint({
+            'epoch': NUM_EPOCH,
+            'step': NUM_STEPS,
+            'state_dict': model.state_dict(),
+            'optimizer' : optimizer.state_dict(),
+            'scheduler': scheduler,
+        }, is_best, save_path, 'checkpoint_{0}.pth.tar'.format(date.today()), date.today())
+
     else: 
         if not os.path.exists("./model/model_weights"):
             os.makedirs("./model/model_weights")
         torch.save(model.state_dict(), "./model/model_weights/model_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
-
+        save_path = ""
+        save_checkpoint({
+            'epoch': NUM_EPOCH,
+            'step': NUM_STEPS,
+            'state_dict': model.state_dict(),
+            'optimizer' : optimizer.state_dict(),
+            'scheduler': scheduler,
+        }, is_best, save_path, 'checkpoint_{0}.pth.tar'.format(date.today()), date.today())
