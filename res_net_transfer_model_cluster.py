@@ -122,7 +122,9 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 #### Finetuning the convnet ####
 # Load a pretrained model and reset final fully connected layer.
 
-model = models.resnext50_32x4d(pretrained=True)
+# model = models.resnext50_32x4d(pretrained=True)
+
+model = torch.load('resnext')
 num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 4)
 model = model.to(device)
@@ -130,8 +132,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=15)
-torch.save(model, 'saved_models/244sizeresnext')
+model = train_model(model, criterion, optimizer, num_epochs=40)
+torch.save(model, '244sizeresnext2')
 
 
 ## This is if you want to freeze weights
