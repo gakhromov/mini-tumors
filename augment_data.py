@@ -150,7 +150,7 @@ if __name__ == '__main__':
     # TODO: Normalization
     '''
 
-    stage1 = [transforms.CenterCrop(config.IMG_SIZE), transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
+    stage1 = [ torch.Tensor ,transforms.CenterCrop(config.IMG_SIZE), transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
     stage2 = []
     stage3 = []
 
