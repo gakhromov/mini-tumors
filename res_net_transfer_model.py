@@ -10,6 +10,7 @@ import time
 import os
 import copy
 from data import data
+import augment_data
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 
@@ -26,7 +27,12 @@ data_transforms = {
     ]),
 }
 
-train_dataset, test_dataset, train_dataloader, test_dataloader = data.load_datasets()
+train_dataset, test_dataset = augment_data.create_split(test_transform = augment_data.Norm(), train_transform = augment_data.Norm())
+train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
+test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=64, shuffle=True)
+
+
+# train_dataset, test_dataset, train_dataloader, test_dataloader = data.load_datasets()
 image_datasets = {
     'train' : train_dataset,
     'val'   : test_dataset
