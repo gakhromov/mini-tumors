@@ -157,8 +157,10 @@ if __name__ == '__main__':
     This is currently what the other team claims to have done. I/E Normalize data and center crop
     # TODO: Normalization
     '''
+    
     stage1 = [torch.Tensor, transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
     stage2 = [filters.Reflections()]
+
     stage3 = []
     if not os.path.exists(f'{config.ROOT_PATH}/data/augmented'):
         os.makedirs(f'{config.ROOT_PATH}/data/augmented')
