@@ -26,6 +26,8 @@ install = "*"
 torch = {version="1.13.0", index="pytorch"}
 torchvision = {version="0.14.0", index="pytorch"}
 torchaudio = {version="0.13.0", index="pytorch"}
+vit-pytorch = "*"
+timm = "*"
 
 [dev-packages]
 jupyter = "==1.0.0"
