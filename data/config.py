@@ -7,7 +7,7 @@ DATASETS = [
     "ColonCancer", 
     # "BrainCancer",
 ]
-IMG_SIZE = (64, 64)
+IMG_SIZE = (224, 224)
 
 # Bad droplet image detection alg params
 HOUGH_CIRCLES = {
