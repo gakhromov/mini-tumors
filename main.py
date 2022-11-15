@@ -13,7 +13,7 @@ parser.add_argument("--img_size", type=int, default=64)
 parser.add_argument("--state", type=str, default="idle") #train, test
 
 parser.add_argument("--learning_rate", type=float, default=1e-3)
-parser.add_argument("--decay", type=float, default=0.9)
+parser.add_argument("--decay", type=float, default=0.95)
 parser.add_argument("--n_epochs", type=int, default=0)
 parser.add_argument("--use_sampler", type=bool, default=True)
 
