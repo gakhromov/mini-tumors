@@ -12,7 +12,7 @@ from skimage.transform import resize
 from sklearn.model_selection import train_test_split
 from torchvision import transforms
 
-from data.data import Data
+from data.data import Data, sampler
 from data import filters
 
 import json
@@ -121,16 +121,16 @@ class AugmentedData(Data):
 
         img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
         if self.resize == True:
-            print('Complaint: resizing already done once, impossible to upscale beyond current config.')
-            img = resize(img, (config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
-
+            #print('Complaint: resizing already done once, impossible to upscale beyond current config.')
+            img = resize(img, (1, config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=True, preserve_range=True)
         if self.transform != None:
             img = self.transform(img)
-        
-        return img, self.labels[idx]
+        #print("img", type(torch.tensor(img)))
+        #print("label", torch.tensor(self.labels[idx], dtype=torch.long))
+        return torch.tensor(img), torch.tensor(self.labels[idx], dtype=torch.long)
     
 
-def create_split(test_transform = None, train_transform = None, test_percentage = 0.2):
+def create_split(batch_size=64, use_sampler=False, test_transform = None, train_transform = None, test_percentage = 0.2):
     '''
     Create and return two AugmentedData objects, one each for the train and test split. Test split is 
     test_percentage sized random sample of entire dataset.
@@ -141,7 +141,15 @@ def create_split(test_transform = None, train_transform = None, test_percentage 
 
     train_data = AugmentedData( train_transform, indecies=train_idx)
     test_data = AugmentedData( test_transform, indecies=test_idx)
-    return train_data, test_data
+
+    if use_sampler:
+        sampler_train = sampler(train_data)
+        train_dataloader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_size, sampler=sampler_train)
+    else:
+        train_dataloader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)
+    test_dataloader = torch.utils.data.DataLoader(dataset=test_data, batch_size=batch_size, shuffle=True)
+
+    return train_data, test_data, train_dataloader, test_dataloader
 
 
 if __name__ == '__main__':
@@ -149,11 +157,9 @@ if __name__ == '__main__':
     This is currently what the other team claims to have done. I/E Normalize data and center crop
     # TODO: Normalization
     '''
-
-    stage1 = [transforms.CenterCrop(config.IMG_SIZE), transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
-    stage2 = []
+    stage1 = [torch.Tensor, transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
+    stage2 = [filters.Reflections()]
     stage3 = []
-
     if not os.path.exists(f'{config.ROOT_PATH}/data/augmented'):
         os.makedirs(f'{config.ROOT_PATH}/data/augmented')
         da = DataAugmentor(stage1, stage2, stage3)

@@ -12,7 +12,7 @@ class ConvNet(torch.nn.Module):
     """
     Simple convolutional neural network. 
     """
-    def __init__(self, feature_map_sizes, filter_sizes, hidden, num_classes, img_size, activation=torch.nn.LeakyReLU()):
+    def __init__(self, feature_map_sizes, filter_sizes, output_fc, num_classes, img_size, activation=torch.nn.LeakyReLU()):
         """
         Constructor for ConvNet.
         :param feature_map_sizes: list of out_channels for the convolution layers.
@@ -33,10 +33,11 @@ class ConvNet(torch.nn.Module):
 
         #Fully Connected
         in_dim = int(int(img_size / 2**(len(filter_sizes)))**2 * out_channels)
-        for i, hidden_dim in enumerate(hidden):
-            if i == len(hidden)-1: self.fc = FullyConnectedLayer(in_dim, hidden_dim, f'dens{i}_layer', activation=None)
-            else: self.fc = FullyConnectedLayer(in_dim, hidden_dim, f'dens{i}_layer', activation=activation)
-            in_dim = hidden_dim
+        self.fcs = torch.nn.ModuleList()
+        for i, output_dim in enumerate(output_fc):
+            if i == len(output_fc)-1: self.fcs.append(FullyConnectedLayer(in_dim, output_dim, f'dens{i}_layer', activation=None))
+            else: self.fcs.append(FullyConnectedLayer(in_dim, output_dim, f'dens{i}_layer', activation=activation))
+            in_dim = output_dim
 
     def get_probabilities(self, x):
         """
@@ -55,7 +56,8 @@ class ConvNet(torch.nn.Module):
         for conv in self.convolutions:
             x = conv(x)
         x = self.flatten(x)
-        x = self.fc(x)
+        for fc in self.fcs:
+            x = fc(x)
         return x
     
 def weights_init(m, init="Normal"):

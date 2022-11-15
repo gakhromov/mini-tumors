@@ -16,10 +16,10 @@ class FullyConnectedLayer(torch.nn.Module):
         :param bias: If set to False, the layer will not learn an additive bias. Default: True.
         """
         super().__init__()
-        # self.fc = torch.nn.Linear(input_dim, output_dim)
+        self.fc = torch.nn.Linear(input_dim, output_dim)
         self.activation = activation
         self.name = layer_name
-        self.dropout = torch.nn.Dropout(0.25)
+        #self.dropout = torch.nn.Dropout(0.25)
 
     def forward(self, x):
         """
@@ -28,7 +28,7 @@ class FullyConnectedLayer(torch.nn.Module):
         :return: The output of this layer. 
         """
         x = self.fc(x)
-        x = self.dropout(x)
+        #x = self.dropout(x)
         if self.activation:
             x = self.activation(x)
         return x
