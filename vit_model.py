@@ -127,13 +127,13 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 # num_ftrs = model.fc.in_features
 # model.fc = nn.Linear(num_ftrs, 4)
 
-model = timm.create_model('vit_base_patch16_224', pretrained=True, num_classes=4)
+model = torch.load('vision_transformer')
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=15)
+model = train_model(model, criterion, optimizer, num_epochs=40)
 torch.save(model, 'saved_models/vit_model')
 
 
