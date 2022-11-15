@@ -122,7 +122,9 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 #### Finetuning the convnet ####
 # Load a pretrained model and reset final fully connected layer.
 
-model = models.resnext50_32x4d(pretrained=True)
+# model = models.resnext50_32x4d(pretrained=True)
+
+model = torch.load('./resnet_adam_frozen_152.pth')
 num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 4)
 model = model.to(device)
