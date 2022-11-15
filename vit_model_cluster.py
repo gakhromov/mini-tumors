@@ -74,7 +74,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
-                inputs = data_transforms[phase](inputs)
+                # inputs = data_transforms[phase](inputs)
                 inputs = inputs.to(device)
                 labels = labels.to(device)
 
@@ -92,7 +92,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
                         optimizer.step()
 
                 # statistics
-                running_loss += loss.item() * inputs.size(0)
+                running_loss += float(loss.item()) * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
 
             if phase == 'train':
@@ -127,13 +127,14 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 # num_ftrs = model.fc.in_features
 # model.fc = nn.Linear(num_ftrs, 4)
 
+# model = timm.create_model('vit_base_patch16_224', pretrained=True, num_classes=4)
 model = torch.load('vision_transformer')
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=40)
+model = train_model(model, criterion, optimizer, num_epochs=15)
 torch.save(model, 'saved_models/vit_model')
 
 
