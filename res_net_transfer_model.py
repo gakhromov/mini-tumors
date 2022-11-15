@@ -131,7 +131,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
 model = train_model(model, criterion, optimizer, num_epochs=15)
-torch.save(model, 'saved_models/resnet_adam_clean_data_2')
+torch.save(model, 'saved_models/244sizeresnext')
 
 
 ## This is if you want to freeze weights
