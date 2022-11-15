@@ -31,7 +31,7 @@ parser.add_argument("--keep", type=bool, default=False)
 args = parser.parse_args()
 
 print("State :", args.state)
-if args.augmented: train_data_a, test_data_a = create_split(batch_size = args.batch_size, use_sampler = args.use_sample)
+if args.augmented: train_data_a, test_data_a = create_split(batch_size = args.batch_size, use_sampler = args.use_sampler)
 else: train_dataset, test_dataset, train_dataloader, test_dataloader = load_datasets(batch_size = args.batch_size, img_size = args.img_size, use_sampler=args.use_sampler)
 
 
