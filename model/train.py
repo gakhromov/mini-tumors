@@ -76,7 +76,7 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
 
     return total_loss, total_accuracy
 
-def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, batch_size):
+def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler, n_epochs, train_dataloader, test_dataloader, save_path, NUM_EPOCH, NUM_STEPS, batch_size, keep):
     """
     Train and evaluate model.
     """
@@ -106,14 +106,11 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
         print(f"[Epoch {NUM_EPOCH}] - Training : accuracy = {train_accuracy}, loss = {train_loss}", end=" ")
         print(f"Validation : accuracy = {val_accuracy}, loss = {val_loss}")
 
-        NUM_EPOCH += 1
+        NUM_EPOCH+=1
 
     is_best = False #TODO implement is best
 
     if save_path != "" : 
-        
-        torch.save(model.state_dict(), save_path + "_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
-        
         save_checkpoint({
             'epoch': NUM_EPOCH,
             'step': NUM_STEPS,
@@ -125,12 +122,19 @@ def train(device, model, cross_entropy_loss, learning_rate, optimizer, scheduler
     else: 
         if not os.path.exists("./model/model_weights"):
             os.makedirs("./model/model_weights")
-        torch.save(model.state_dict(), "./model/model_weights/model_" + str(date.today()) + "_" + str(NUM_STEPS) + "_" + str(NUM_EPOCH) + ".pt")
-        save_path = ""
-        save_checkpoint({
-            'epoch': NUM_EPOCH,
-            'step': NUM_STEPS,
-            'state_dict': model.state_dict(),
-            'optimizer' : optimizer.state_dict(),
-            'scheduler': scheduler,
-        }, is_best, save_path, 'checkpoint_{0}.pth.tar'.format(date.today()), date.today())
+        if keep:
+            save_checkpoint({
+                'epoch': NUM_EPOCH,
+                'step': NUM_STEPS,
+                'state_dict': model.state_dict(),
+                'optimizer' : optimizer.state_dict(),
+                'scheduler': scheduler.state_dict(),
+            }, is_best, "./model/model_weights/", 'keep_{0}.pth.tar'.format(date.today()), date.today())
+        else:
+            save_checkpoint({
+                'epoch': NUM_EPOCH,
+                'step': NUM_STEPS,
+                'state_dict': model.state_dict(),
+                'optimizer' : optimizer.state_dict(),
+                'scheduler': scheduler.state_dict(),
+            }, is_best, "./model/model_weights/", 'checkpoint_{0}.pth.tar'.format(date.today()), date.today())
