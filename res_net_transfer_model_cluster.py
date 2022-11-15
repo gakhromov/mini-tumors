@@ -124,8 +124,8 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 
 # model = models.resnext50_32x4d(pretrained=True)
 
-model = torch.load('resnext')
-num_ftrs = model.fc.in_features
+model = torch.load('resnextbig')
+num_ftrs = model.fc.in_featurespy
 model.fc = nn.Linear(num_ftrs, 4)
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
