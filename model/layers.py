@@ -16,13 +16,14 @@ class FullyConnectedLayer(torch.nn.Module):
         :param bias: If set to False, the layer will not learn an additive bias. Default: True.
         """
         super().__init__()
-        self.hidden = 128
+        self.hidden = 32
         self.fc1 = torch.nn.Linear(input_dim, self.hidden)
-        self.fc2 = torch.nn.Linear(self.hidden, output_dim)
+        self.fc2 = torch.nn.Linear(self.hidden, 10)
+        self.fc3 = torch.nn.Linear(10, output_dim)
         # self.fc = torch.nn.Linear(input_dim, output_dim)
         self.activation = activation
         self.name = layer_name
-        #self.dropout = torch.nn.Dropout(0.25)
+        self.dropout = torch.nn.Dropout(0.25)
 
     def forward(self, x):
         """
@@ -32,7 +33,7 @@ class FullyConnectedLayer(torch.nn.Module):
         """
         x = self.fc1(x)
         x = self.fc2(x)
-        # x = self.fc(x)
+        x = self.fc3(x)
         if self.activation:
             x = self.activation(x)
         return x
@@ -65,7 +66,7 @@ class ConvolutionPoolLayer(torch.nn.Module):
         # This adds some non-linearity to the formula and allows us to learn more complicated functions.
         self.activation = activation
 
-        #self.dropout = torch.nn.Dropout(0.25)
+        self.dropout = torch.nn.Dropout(0.25)
         
     def get_padding_amount(self, shape):
         """
@@ -101,6 +102,7 @@ class ConvolutionPoolLayer(torch.nn.Module):
         padding = self.get_padding_amount(x.shape)
         x = torch.nn.functional.pad(x, padding)  # [left, right, top, bot]
         x = self.conv(x)
+        x = self.dropout(x)
         if self.max_pool:
             x = self.max_pool(x)
         if self.activation:

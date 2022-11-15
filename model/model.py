@@ -75,3 +75,16 @@ def weights_init(m, init="Normal"):
             torch.nn.init.xavier_normal_(m.bias.data)
 
             
+def get_size_one_layer(size, padding, filter, stride):
+    #h_out = (size + 2*padding[0] - (filter-1) - 1)/stride[0] + 1
+    #w_out = (h + 2*padding[1] - (filter-1) - 1)/stride[1] + 1
+    return (size + 2*padding - (filter-1) - 1)/stride[0] + 1
+
+def get_size(filters, size_init):
+    size = 0
+    for filter in filters:
+        size = get_size_one_layer(size_init, 0, filter, 1)
+        size/2
+    return size**2 
+
+
