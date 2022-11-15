@@ -86,6 +86,7 @@ class Data:
 
 class Norm:
     def __call__(self, img):
+        img -= img.min()
         img /= img.max()
         return img
 
@@ -105,3 +106,10 @@ def load_datasets(
     # call `train_dataset.show_sample(idx, channel=3)` to show an image of one sample
     # call `train_dataset.show_droplet(idx, channel=3)` to show an image of one droplet
     return train_dataset, test_dataset, train_dataloader, test_dataloader
+
+def sampler(dataset):
+    classes = [0,0,0,0]
+    for img, label in dataset:
+        classes[label] += 1
+    class_weights = [len(dataset)/cl for cl in classes]
+    return torch.tensor(class_weights).cuda()

@@ -2,8 +2,9 @@ import os
 
 import pandas as pd
 import numpy as np
-import nd2
 from nd2reader import ND2Reader
+from skimage.transform import resize
+import cv2
 import json
 from tqdm import tqdm
 
@@ -48,6 +49,9 @@ def patch_dataset():
             df.to_excel(writer, sheet_name='0812_1020_sorting', index=True, header=None)
 
 def get_sample_list(datasets: list):
+    """
+    Creates a metadata list of all images with references to xlsx and info files
+    """
     sample_list = []
     for dataset in datasets:
         directory = f'{config.ROOT_PATH}/data/TumorScoring/{dataset}/'
@@ -68,6 +72,10 @@ def get_sample_list(datasets: list):
 def create_splits_with_labels(
     sample_list: list, droplet_list: list, sample_idx: int, labels: list
 ):
+    """
+    Iterates through droplets in the sample and creates image files 
+    + labels file + metadata for droplets
+    """
     df = pd.read_excel(
         sample_list[sample_idx]['xlsx_path'],
         index_col=0,
@@ -106,12 +114,54 @@ def create_splits_with_labels(
             clean_idx = len(labels)
             # image
             drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int32)
-            np.save(f'{config.ROOT_PATH}/data/clean/img{clean_idx}.npy', drop_img)
-            # label
-            label = int(df_labels['label'].loc[droplet])
-            labels.append((clean_idx, label))
-            # save metadata
-            droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
+            # check for bad images
+            if img_is_good(drop_img, **config.HOUGH_CIRCLES):
+                np.save(f'{config.ROOT_PATH}/data/clean/img{clean_idx}.npy', drop_img)
+                # label
+                label = int(df_labels['label'].loc[droplet])
+                labels.append((clean_idx, label))
+                # save metadata
+                droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
+
+def img_is_good(img, dp, minDist, param1, param2, minRadius, pct, resize_size):
+    """
+    Checks if the image has one clear circle in the centre of approx. the size of the image
+    @return True if the img has a one clear big circle, False otherwise
+    """
+    def check_circle(det_circle, true_circle_r, pct):
+        '''
+        Similarity metric for detected circles and actual droplet
+        @param pct -- maximum deviation as fraction of true metrics
+        @return True if any of circles are good
+        '''
+         # Check center
+        offset_from_origin = ((true_circle_r-det_circle[0])**2 + (true_circle_r-det_circle[1])**2)**0.5
+        check_origin = offset_from_origin <= pct * true_circle_r
+        check_r = (1-pct) * true_circle_r <= det_circle[2] <= (1+pct) * true_circle_r
+        return check_r and check_origin
+
+    # convert to openCV format
+    img_cv = (img / img.max() * 255)[img.shape[0]-1, :, :]
+    # resize for faster computation
+    img_cv = resize(img_cv, resize_size, anti_aliasing=False)
+    img_cv = np.array(img_cv, dtype=np.uint8)
+    # detect circles
+    circles = cv2.HoughCircles(
+        img_cv, cv2.HOUGH_GRADIENT, dp, minDist,
+        param1=param1, param2=param2,
+        minRadius=minRadius, maxRadius=img_cv.shape[0]//2,
+    )
+    # get the list of circles
+    if circles is None:
+        circles = []
+    else:
+        circles = circles[0]
+    
+    img_ok = False
+    for circle in circles:
+        img_ok = img_ok or check_circle(circle, resize_size[0]//2, pct)
+    
+    return img_ok
     
 
 if __name__ == '__main__':
@@ -133,4 +183,3 @@ if __name__ == '__main__':
             json.dump({'samples': sample_list}, f)
         with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'w') as f:
             json.dump({'droplets': droplet_list}, f)
-

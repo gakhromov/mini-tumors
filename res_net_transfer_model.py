@@ -27,12 +27,12 @@ data_transforms = {
     ]),
 }
 
-train_dataset, test_dataset = augment_data.create_split(test_transform = augment_data.Norm(), train_transform = augment_data.Norm())
-train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
-test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=64, shuffle=True)
+# train_dataset, test_dataset = augment_data.create_split(test_transform = augment_data.Norm(), train_transform = augment_data.Norm())
+# train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=64, shuffle=True)
+# test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=64, shuffle=True)
 
 
-# train_dataset, test_dataset, train_dataloader, test_dataloader = data.load_datasets()
+train_dataset, test_dataset, train_dataloader, test_dataloader = data.load_datasets()
 image_datasets = {
     'train' : train_dataset,
     'val'   : test_dataset
@@ -43,6 +43,7 @@ dataloaders = {
 }
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
 
+weights = data.sampler(image_datasets['train'])
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -121,7 +122,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
 #### Finetuning the convnet ####
 # Load a pretrained model and reset final fully connected layer.
 
-model = models.resnet18(pretrained=True)
+model = models.resnext50_32x4d(pretrained=True)
 num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 4)
 model = model.to(device)
@@ -129,8 +130,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=25)
-torch.save(model, './resnet_adam_best_val_25epochs.pth')
+model = train_model(model, criterion, optimizer, num_epochs=15)
+torch.save(model, 'saved_models/resnet_adam_clean_data_2')
 
 
 ## This is if you want to freeze weights
