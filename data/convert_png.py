@@ -17,7 +17,7 @@ def convert(img):
 
 
 I_PATH = './augmented/'
-O_PATH = './converted/'
+O_PATH = './converted/images/'
 
 labels = np.load(I_PATH + 'labels.npy')
 
