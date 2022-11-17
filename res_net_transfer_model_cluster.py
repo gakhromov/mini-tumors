@@ -20,9 +20,12 @@ std = np.array([0.229, 0.224, 0.225])
 
 data_transforms = {
     'train': transforms.Compose([
+        transforms.CenterCrop(64),
         transforms.Normalize(mean, std)
+
     ]),
     'val': transforms.Compose([
+         transforms.CenterCrop(64),
         transforms.Normalize(mean, std)
     ]),
 }
@@ -132,8 +135,8 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=40)
-torch.save(model, '244sizeresnext2')
+model = train_model(model, criterion, optimizer, num_epochs=25)
+torch.save(model, '64resnextbigcentercrop')
 
 
 ## This is if you want to freeze weights
