@@ -20,12 +20,12 @@ std = np.array([0.229, 0.224, 0.225])
 
 data_transforms = {
     'train': transforms.Compose([
-        transforms.CenterCrop(64),
+        # transforms.CenterCrop(64),
         transforms.Normalize(mean, std)
 
     ]),
     'val': transforms.Compose([
-         transforms.CenterCrop(64),
+        #  transforms.CenterCrop(64),
         transforms.Normalize(mean, std)
     ]),
 }
@@ -132,11 +132,11 @@ num_ftrs = model.fc.in_features
 model.fc = nn.Linear(num_ftrs, 4)
 model = model.to(device)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optim.SGD(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
-model = train_model(model, criterion, optimizer, num_epochs=200)
-torch.save(model, '64resnextbigcentercrop')
+model = train_model(model, criterion, optimizer, num_epochs=50)
+torch.save(model, '64resnextbigsgd')
 
 
 ## This is if you want to freeze weights

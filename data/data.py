@@ -91,7 +91,7 @@ class Norm:
         return img
 
 def load_datasets(
-    batch_size = 8, 
+    batch_size = 64, 
     img_size = -1
 ):  
     # for now, train dataset = test
