@@ -69,8 +69,8 @@ def get_sample_list(datasets: list):
                 for channel in range(sample_img.shape[0]):
                     sample_img_ch = sample_img[channel].flatten()
                     stat = {
-                        'max': np.max(sample_img_ch), 'min': np.min(sample_img_ch),
-                        'percentile': np.percentile(sample_img_ch, config.PERCENTILE),
+                        'max': int(np.max(sample_img_ch)), 'min': int(np.min(sample_img_ch)),
+                        'percentile': float(np.percentile(sample_img_ch, config.PERCENTILE)),
                     }
                     stats.append(stat)
                 # fill the stats
