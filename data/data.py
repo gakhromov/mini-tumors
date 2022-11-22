@@ -71,19 +71,39 @@ class Data:
 	
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
-        # Not sure what is going wrong here, but the original doesn't work
 
+        # resize
         if self.img_size == -1:
             img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
         else:
             img = resize(img, (img.shape[0], self.img_size, self.img_size), anti_aliasing=False)
 
-        img = img[img.shape[0]-1, :, :]
-        if self.transform != None:
+        # take last channel
+        channel = img.shape[0]-1
+        img = img[channel, :, :]
+        # normalise
+        sample_idx = self.droplet_list[idx]['sample_idx']
+        norm_min = self.sample_list[sample_idx]['stats'][channel]['min']
+        norm_max = self.sample_list[sample_idx]['stats'][channel]['percentile']
+        img = self.__min_max_norm(img, norm_min, norm_max)
+
+        # transform
+        if self.transform is not None:
             img = self.transform(img)
         else:
             img = img[None,:,:]
         return img, torch.tensor(self.labels[idx, 1], dtype=torch.long)
+    
+    def __min_max_norm(self, x, min=None, max=None, clip=True):
+        if min is None:
+            min = np.min(x)
+        if max is None:
+            max = np.max(x)
+        x_norm = (x - min) / (max - min)
+        if clip:
+            x_norm = np.clip(x_norm, 0, 1)
+        return x_norm
+
 
 def load_datasets(
     batch_size = 64, 

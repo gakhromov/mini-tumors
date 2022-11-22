@@ -19,3 +19,6 @@ HOUGH_CIRCLES = {
     "pct": 0.15, 
     "resize_size": (50, 50)
 }
+
+# Normalisation
+PERCENTILE = 95
