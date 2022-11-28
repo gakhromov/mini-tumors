@@ -25,7 +25,9 @@ PS: If this feels overengineered, just leave stage2 and stage3 as emtpy lists an
 
 
 ## Running (local)
-1. ?
+1. Specify all the different option using the parser, for example:
+`--state "train"`, `--n_epochs 10`, `--use_sampler True` (to have a balanced dataset)
+2. Run `pipenv run python main.py`
 
 ## Setup (Euler)
 1. Access the Euler cluster via SSH connection. See [this tutorial](https://scicomp.ethz.ch/wiki/Accessing_the_clusters). I recommend using a program that provides some kind of GUI so that you can easily navigate the cluster environment (I personally use MobaXterm). You need to be on the ETH network (directly or via VPN) to access Euler.
