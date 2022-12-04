@@ -64,7 +64,7 @@ class DataAugmentor:
 
             # Apply universal filters to image
             for filter in self.filters_1:
-                original_pic = filter(original_pic)
+                original_pic = filter(original_pic.float())
 
             # Create additional copies of image
             pics = [original_pic]
@@ -118,16 +118,13 @@ class AugmentedData(Data):
     def __getitem__(self, idx):
         # Get actual index
         ds_index = self.indecies[idx]
-
         img = np.load(f'{config.ROOT_PATH}/data/augmented/img{ds_index}.npy')
         if self.resize == True:
-            #print('Complaint: resizing already done once, impossible to upscale beyond current config.')
+            #print('Complaint: resizing already done once, impossible to upscale beyond current config.') 
             img = resize(img, (1, config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=True, preserve_range=True)
         if self.transform != None:
             img = self.transform(img)
-        #print("img", type(torch.tensor(img)))
-        #print("label", torch.tensor(self.labels[idx], dtype=torch.long))
-        return torch.tensor(img), torch.tensor(self.labels[idx], dtype=torch.long)
+        return torch.tensor(img, dtype=torch.float64), torch.tensor(self.labels[idx], dtype=torch.long)
     
 
 def create_split(batch_size=64, use_sampler=False, test_transform = None, train_transform = None, test_percentage = 0.2):
@@ -140,6 +137,7 @@ def create_split(batch_size=64, use_sampler=False, test_transform = None, train_
     train_idx, test_idx = train_test_split(list(range(len(all_data))), test_size=test_percentage)
 
     train_data = AugmentedData( train_transform, indecies=train_idx)
+    
     test_data = AugmentedData( test_transform, indecies=test_idx)
 
     if use_sampler:
@@ -148,7 +146,6 @@ def create_split(batch_size=64, use_sampler=False, test_transform = None, train_
     else:
         train_dataloader = torch.utils.data.DataLoader(dataset=train_data, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_data, batch_size=batch_size, shuffle=True)
-
     return train_data, test_data, train_dataloader, test_dataloader
 
 

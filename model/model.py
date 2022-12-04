@@ -53,6 +53,7 @@ class ConvNet(torch.nn.Module):
         :param x: The input tensor.
         :return: The activated output of the network. 
         """
+        x = x.float()
         for conv in self.convolutions:
             x = conv(x)
         x = self.flatten(x)

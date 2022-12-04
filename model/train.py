@@ -19,9 +19,9 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
     total_loss, total_accuracy = 0., 0.
     temp = random.randint(0,10)
     for i, (image, label) in enumerate(tqdm(train_dataloader)):
-        for j in range(image.shape[0]):
-            image[j] -= image[j].min(1, keepdim=True)[0]
-            image[j] /= image[j].max(1, keepdim=True)[0]
+        # for j in range(image.shape[0]):
+        #     image[j] -= image[j].min(1, keepdim=True)[0]
+        #     image[j] /= image[j].max(1, keepdim=True)[0]
         image, label = image.to(device), label.to(device) # put the data on the selected execution device
         optimizer.zero_grad()   # zero the parameter gradients
         output = model(image)  # forward pass
@@ -32,8 +32,6 @@ def train_step(device, model, cross_entropy_loss, learning_rate, optimizer, trai
         loss = cross_entropy_loss(output, label)    # compute loss
         total_loss += loss.item()
         loss.backward() # backward pass
-        # for name, param in model.named_parameters():
-        #     print(name, param.grad)
         optimizer.step()    # perform update
 
         NUM_STEPS += 1
@@ -62,9 +60,9 @@ def evaluate(device, model, cross_entropy_loss, learning_rate, optimizer, val_da
     total_loss, total_accuracy = 0., 0.
     with torch.no_grad():
         for i, (image, label) in enumerate(tqdm(val_dataloader)):
-            for j in range(image.shape[0]):
-                image[j] -= image[j].min(1, keepdim=True)[0]
-                image[j] /= image[j].max(1, keepdim=True)[0]
+            # for j in range(image.shape[0]):
+            #     image[j] -= image[j].min(1, keepdim=True)[0]
+            #     image[j] /= image[j].max(1, keepdim=True)[0]
             image, label = image.to(device), label.to(device) # put the data on the selected execution device
             output = model(image)  # forward pass
             loss = cross_entropy_loss(output, label)    # compute loss

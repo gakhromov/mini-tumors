@@ -76,7 +76,8 @@ class Data:
             img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=True, preserve_range=True)
         else:
             img = resize(img, (img.shape[0], self.img_size, self.img_size), anti_aliasing=True, preserve_range=True)
-        img = img[img.shape[0]-1, :, :]
+        #img = img[img.shape[0]-1, :, :]
+        img = img[1, :, :]
         if self.transform != None:
             img = self.transform(img)
         else:
@@ -111,5 +112,5 @@ def sampler(dataset):
         classes[label] += 1
     class_weights = [len(dataset)/cl for cl in classes]
     weights = [class_weights[label] for img,label in dataset]
-    sampler = torch.utils.data.WeightedRandomSampler(weights, min(classes)*4, replacement=True)
+    sampler = torch.utils.data.WeightedRandomSampler(weights, max(classes)*3, replacement=True)
     return sampler
