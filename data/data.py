@@ -93,7 +93,7 @@ class Data:
             img = self.transform(img)
         else:
             img = img[None,:,:]
-        return img, torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        return torch.tensor(np.array(img), dtype=torch.float32).repeat(3, 1, 1), torch.tensor(self.labels[idx, 1], dtype=torch.long)
     
     def __min_max_norm(self, x, min=None, max=None, clip=True):
         if min is None:
@@ -113,7 +113,7 @@ def load_datasets(
 ):  
     # for now, train dataset = test
 
-    dataset = Data(transform = Norm(), img_size = img_size)
+    dataset = Data(img_size = img_size)
 
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
     

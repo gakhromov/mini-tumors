@@ -136,7 +136,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001)
 # step_lr_scheduler = lr_scheduler.StepLR(optimizer, step_size=7, gamma=0.1)
 
 model = train_model(model, criterion, optimizer, num_epochs=50)
-torch.save(model, '64resnextbigsgd')
+torch.save(model, 'resnextclipped')
 
 
 ## This is if you want to freeze weights
