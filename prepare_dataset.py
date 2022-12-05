@@ -60,12 +60,27 @@ def get_sample_list(datasets: list):
             if fname.endswith('.nd2'):
                 # extract sample name from the image file name
                 f = fname.split('.nd2')[0]
+                # open image to get image stats
+                sample_img = ND2Reader(f'{directory}ImageFiles/{f}.nd2')
+                sample_img.iter_axes = 'c'
+                sample_img = np.array(sample_img)
+                # compute stats from the image
+                stats = []
+                for channel in range(sample_img.shape[0]):
+                    sample_img_ch = sample_img[channel].flatten()
+                    stat = {
+                        'max': int(np.max(sample_img_ch)), 'min': int(np.min(sample_img_ch)),
+                        'percentile': float(np.percentile(sample_img_ch, config.PERCENTILE)),
+                    }
+                    stats.append(stat)
+                # fill the stats
                 suffix = '_No_tt1-tt1_diamRed0_move40'
                 sample_list.append({
                     'name': f,
                     'img_path': f'{directory}ImageFiles/{f}.nd2',
                     'xlsx_path': f'{directory}ScoringFiles/{f+suffix}/{f+suffix}.xlsx',
                     'info_txt': f'{directory}ScoringFiles/{f+suffix}/{f+suffix}_Info.txt',
+                    'stats': stats,
                 })
     return sample_list
 

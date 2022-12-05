@@ -72,27 +72,44 @@ class Data:
 	
     def __getitem__(self, idx):
         img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
-        # Not sure what is going wrong here, but the original doesn't work
-
+        
+        # resize
         if self.img_size == -1:
-            img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=False)
+            img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=True, preserve_range=True)
         else:
             img = resize(img, (img.shape[0], self.img_size, self.img_size), anti_aliasing=False)
 
-        if self.transform != None:
+        # take last channel
+        channel = img.shape[0]-1
+        img = img[channel, :, :]
+        # normalise
+        sample_idx = self.droplet_list[idx]['sample_idx']
+        norm_min = self.sample_list[sample_idx]['stats'][channel]['min']
+        norm_max = self.sample_list[sample_idx]['stats'][channel]['percentile']
+        img = self.__min_max_norm(img, norm_min, norm_max)
+
+        # transform
+        if self.transform is not None:
             img = self.transform(img)
-
-        return torch.tensor(np.array([img[img.shape[0]-1, :, :]]), dtype=torch.float32).repeat(3, 1, 1), torch.tensor(self.labels[idx, 1], dtype=torch.long)
-
-class Norm:
-    def __call__(self, img):
-        img -= img.min()
-        img /= img.max()
-        return img
+        else:
+            img = img[None,:,:]
+        return img, torch.tensor(self.labels[idx, 1], dtype=torch.long)
+    
+    def __min_max_norm(self, x, min=None, max=None, clip=True):
+        if min is None:
+            min = np.min(x)
+        if max is None:
+            max = np.max(x)
+        x_norm = (x - min) / (max - min)
+        if clip:
+            x_norm = np.clip(x_norm, 0, 1)
+        return x_norm
+        
 
 def load_datasets(
     batch_size = 64, 
-    img_size = -1
+    img_size = -1,
+    use_sampler = False
 ):  
     # for now, train dataset = test
 
@@ -100,7 +117,11 @@ def load_datasets(
 
     train_dataset, test_dataset = torch.utils.data.random_split(dataset, lengths=[int(len(dataset)*0.8),len(dataset) - int(len(dataset)*0.8)], generator=torch.Generator())
     
-    train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
+    if use_sampler:
+        sampler_train = sampler(train_dataset)
+        train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, sampler=sampler_train)
+    else:
+        train_dataloader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
     # you can use train and test datasets for visualisations
     # call `train_dataset.show_sample(idx, channel=3)` to show an image of one sample
@@ -112,4 +133,6 @@ def sampler(dataset):
     for img, label in dataset:
         classes[label] += 1
     class_weights = [len(dataset)/cl for cl in classes]
-    return torch.tensor(class_weights).cuda()
+    weights = [class_weights[label] for img,label in dataset]
+    sampler = torch.utils.data.WeightedRandomSampler(weights, min(classes)*4, replacement=True)
+    return sampler
