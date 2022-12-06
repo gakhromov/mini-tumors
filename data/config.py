@@ -21,4 +21,4 @@ HOUGH_CIRCLES = {
 }
 
 # Normalisation
-PERCENTILE = 95
+PERCENTILE = 85
