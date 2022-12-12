@@ -2,6 +2,7 @@
 .DS_STORE
 TumorScoring/
 clean/
+clean_samples/
 __pycache__/
 model_weights/
 tensorboard/

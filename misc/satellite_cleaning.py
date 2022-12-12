@@ -1,6 +1,5 @@
-
 import numpy as np
-from scipy.ndimage import label, generate_binary_structure
+from scipy.ndimage import label
 from sklearn.mixture import GaussianMixture
 import math
 import nd2
@@ -67,7 +66,7 @@ def circle_weight(circle, points):
 def clean_sattelites(image, verbose=True, brightness_threshold_percentile=99, elimination_threshold=50, overlap_padding=20, circle_mask_padding=10):
     '''
     Apply satellite dropplet cleaning technique to image (grayscale array). 
-    Techinque should be applied to the large images and will not work properly with individual dropplets
+    Techinque should be applied to the large images and will not work properly with individual droplets
 
     verbose                         <--- Report progress
     brightness_threshold_percentile <--- 100 - percetnage of brightest points to consider
@@ -103,7 +102,7 @@ def clean_sattelites(image, verbose=True, brightness_threshold_percentile=99, el
     # X and Y naming is a bit wierd here
     for feat in tqdm(range(1, num_features + 1)):
         feat_coords = np.argwhere(labeled_features == feat)
-        #TODO: Do something to remove features that are only a coupple of pixels
+        #TODO: Do something to remove features that are only a couple of pixels
         if len(feat_coords) > elimination_threshold:
             feature_points.append(feat_coords)
             x_coords = feat_coords[:,0]
