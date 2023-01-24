@@ -135,3 +135,69 @@ def sampler(dataset):
     weights = [class_weights[label] for img,label in dataset]
     sampler = torch.utils.data.WeightedRandomSampler(weights, min(classes)*4, replacement=True)
     return sampler
+
+
+
+class Data_Inference:
+    def __init__(self, transform = None, img_size = -1):
+        '''
+        transform -- pytorch transform or Composition of several transforms applied to each fetched item.
+        '''
+        with open(f'{config.ROOT_PATH}/data/inference/droplets.json', 'r') as f:
+            self.droplet_list = json.load(f)['droplets']
+        with open(f'{config.ROOT_PATH}/data/inference/samples.json', 'r') as f:
+            self.sample_list = json.load(f)['samples']
+
+
+        self.transform = transform
+        self.img_size = img_size
+    
+    def __len__(self):
+        return len([x for x in os.listdir(f'{config.ROOT_PATH}/data/inference') if x[-4:] == '.npy'])
+    
+    def __getitem__(self, idx):
+        img = np.load(f'{config.ROOT_PATH}/data/inference/img{idx}.npy')
+        
+        # resize
+        if self.img_size == -1:
+            img = resize(img, (img.shape[0], config.IMG_SIZE[0], config.IMG_SIZE[1]), anti_aliasing=True, preserve_range=True)
+        else:
+            img = resize(img, (img.shape[0], self.img_size, self.img_size), anti_aliasing=False)
+
+        # take last channel
+        channel = img.shape[0]-1
+        img = img[channel, :, :]
+        # normalise
+        sample_idx = self.droplet_list[idx]['sample_idx']
+        norm_min = self.sample_list[sample_idx]['stats'][channel]['min']
+        norm_max = self.sample_list[sample_idx]['stats'][channel]['percentile']
+        img = self.__min_max_norm(img, norm_min, norm_max)
+
+        # transform
+        if self.transform is not None:
+            img = self.transform(img)
+        else:
+            img = img[None,:,:]
+        return torch.tensor(np.array(img), dtype=torch.float32).repeat(3, 1, 1)
+    
+    def __min_max_norm(self, x, min=None, max=None, clip=True):
+        if min is None:
+            min = np.min(x)
+        if max is None:
+            max = np.max(x)
+        x_norm = (x - min) / (max - min)
+        if clip:
+            x_norm = np.clip(x_norm, 0, 1)
+        return x_norm
+
+
+def load_datasets_inference(
+    batch_size = 64, 
+    img_size = -1,
+):  
+
+    inference_dataset = Data_Inference(img_size = img_size)
+    
+    inference_dataloader = torch.utils.data.DataLoader(dataset=inference_dataset, batch_size=batch_size, shuffle=False)
+
+    return inference_dataset, inference_dataloader
