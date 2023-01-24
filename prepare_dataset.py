@@ -13,8 +13,12 @@ from data import config
 
 def patch_dataset():
     # Bad code incoming
-    # thnx for a clean dataset 👍
+    # This code is a patch for a specific dataset problem. 
+    # You can just ignore this function (and even remove it completely) if your dataset follows the structure
+    # specified in the docs/preparing_data.md instructions
+
     # Fix #1
+    # In this particular dataset, there was a problem in the xlsx file: some rows/columns were shifted.
     f = '20220722PM_SulfoB1_T1_Split1'
     suffix = '_No_tt1-tt1_diamRed0_move40'
     if not os.path.exists(f'{config.ROOT_PATH}/data/TumorScoring/ColonCancer/ScoringFiles/{f+suffix}/{f+suffix}_old.xlsx'):
@@ -198,4 +202,6 @@ if __name__ == '__main__':
             json.dump({'samples': sample_list}, f)
         with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'w') as f:
             json.dump({'droplets': droplet_list}, f)
+    else:
+        print('The dataset has already been prepared. If you want to prepare a new set of datasets, delete the data/clean folder and re-run the script.')
 
