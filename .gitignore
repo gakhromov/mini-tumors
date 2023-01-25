@@ -1,7 +1,8 @@
 .ipynb_checkpoints
 .DS_STORE
 TumorScoring/
-clean/
+train/
+inference/
 clean_samples/
 __pycache__/
 model_weights/

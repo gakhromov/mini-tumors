@@ -17,10 +17,10 @@ class Data:
         '''
         transform -- pytorch transform or Composition of several transforms applied to each fetched item.
         '''
-        self.labels = np.load(f'{config.ROOT_PATH}/data/clean/labels.npy')
-        with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
+        self.labels = np.load(f'{config.ROOT_PATH}/data/train/labels.npy')
+        with open(f'{config.ROOT_PATH}/data/train/samples.json', 'r') as f:
             self.sample_list = json.load(f)['samples']
-        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'r') as f:
+        with open(f'{config.ROOT_PATH}/data/train/droplets.json', 'r') as f:
             self.droplet_list = json.load(f)['droplets']
         
         self.transform = transform
@@ -50,7 +50,7 @@ class Data:
             return
 
         label = self.labels[idx, 1]
-        img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
+        img = np.load(f'{config.ROOT_PATH}/data/train/img{idx}.npy')
 
         if not ((0 <= channel <= img.shape[0]-1) or (channel == -1)):
             print(f'Error: there are only {img.shape[0]} channels to visualize. channel should be a value between 0 and {img.shape[0]-1}.')
@@ -70,7 +70,7 @@ class Data:
         return len(self.labels)
 	
     def __getitem__(self, idx):
-        img = np.load(f'{config.ROOT_PATH}/data/clean/img{idx}.npy')
+        img = np.load(f'{config.ROOT_PATH}/data/train/img{idx}.npy')
         
         # resize
         if self.img_size == -1:
