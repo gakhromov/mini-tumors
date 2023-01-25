@@ -15,10 +15,13 @@ When you have prepared the dataset, follow these steps to set it up for the subs
 ```bash
 scp -r TumorScoring mbrassard@euler.ethz.ch:/cluster/home/mbrassard/mini-tumors/data/
 ```
-2. Configure the names of the datasets you want to use in `data/config.py` in the array `DATASETS`. For example, if you want to use `BrainCancer` and `ColonCancer` datasets, you should type:
+2. Configure the names of the datasets you want to use in `data/config.py` in the arrays `TRAIN_DATASETS` and `INFERENCE_DATASETS`. For example, if you want to use `BrainCancer` as `ColonCancer` train datasets and `ColonCancerInference` as an inference dataset, you should change the file so that variables look like that:
 ```python
-DATASETS = [
+TRAIN_DATASETS = [
     "BrainCancer", "ColonCancer"
 ]
+INFERENCE_DATASETS = [
+    "ColonCancerInference"
+]
 ```
-2. Run `pipenv run python prepare_dataset.py` to prepare the dataset for use. This script will go through the all the datasets and create `img<INDEX>.npy` files for each droplet, as well as create a `droplets.json` and `samples.json` metadata files. These files should not be modified and are just used for our scripts.
+2. Run `pipenv run python prepare_dataset.py` to prepare the datasets for use. This script will go through the all the datasets and create `img<INDEX>.npy` files for each droplet, as well as create a `droplets.json` and `samples.json` metadata files. In case of the training dataset, it will also create the `labels.npy` file with all droplet labels. These files will be located in `data/train` and `data/inference`. These files are not intended for manual modification. **NB**: If you want to change train or inference datasets, do not forget to remove the respective dataset folder.

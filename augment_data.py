@@ -1,6 +1,6 @@
 '''
 Offline augmentation.
-Read in clean data from $PROJECT/data/clean/ and write augmented version of dataset to $PROJECT/data/augmented/.
+Read in clean data from $PROJECT/data/train/ and write augmented version of dataset to $PROJECT/data/augmented/.
 '''
 
 import os
@@ -39,7 +39,7 @@ class DataAugmentor:
 
     def augment_data(self):
         '''
-        Read through entire dataset in $PROJECT/data/clean. For each image, remove redundant channels
+        Read through entire dataset in $PROJECT/data/train. For each image, remove redundant channels
         and apply augmentation techniques potentially resulting in several images.
         Output them to $PROJECT/data/augmented in same format as cleaned data.
         '''
@@ -48,7 +48,7 @@ class DataAugmentor:
         self.new_inx = 0
         self.sample_list = []
 
-        with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'r') as f:
+        with open(f'{config.ROOT_PATH}/data/train/samples.json', 'r') as f:
             old_sample_list = json.load(f)
 
         # For each example in dataset
@@ -153,10 +153,6 @@ def create_split(batch_size=64, use_sampler=False, test_transform = None, train_
 
 
 if __name__ == '__main__':
-    '''
-    This is currently what the other team claims to have done. I/E Normalize data and center crop
-    # TODO: Normalization
-    '''
     
     stage1 = [torch.Tensor, transforms.Lambda(lambda img : torch.cat( [img[:,:,:], img[:,:,:] , img[:,:,:]], dim=0) ) ]# transforms.Normalize(mean, std, inplace=False) ]
     stage2 = [filters.Reflections()]

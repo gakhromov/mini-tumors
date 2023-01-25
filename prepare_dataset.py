@@ -93,7 +93,7 @@ def create_splits_with_labels(
 ):
     """
     Iterates through droplets in the sample and creates image files 
-    + labels file + metadata for droplets
+    + labels file + metadata for droplets for train
     """
     df = pd.read_excel(
         sample_list[sample_idx]['xlsx_path'],
@@ -116,12 +116,10 @@ def create_splits_with_labels(
         # quit if we have no labels
         return
 
-    # img = nd2.imread(sample_list[sample_idx]['img_path'])
     img = ND2Reader(sample_list[sample_idx]['img_path'])
     img.iter_axes = 'c'
     img = np.array(img)
     
-    splits = []
     for droplet in feats.index:
         # extract x & y coordinates of the center + diameter
         x, y, d = feats[['TrueCentroidX', 'TrueCentroidY', 'DiameterMeasure']].loc[droplet]
@@ -135,12 +133,44 @@ def create_splits_with_labels(
             drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int32)
             # check for bad images
             if img_is_good(drop_img, **config.HOUGH_CIRCLES):
-                np.save(f'{config.ROOT_PATH}/data/clean/img{clean_idx}.npy', drop_img)
+                np.save(f'{config.ROOT_PATH}/data/train/img{clean_idx}.npy', drop_img)
                 # label
                 label = int(df_labels['label'].loc[droplet])
                 labels.append((clean_idx, label))
                 # save metadata
                 droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
+
+def create_splits_without_labels(
+    sample_list: list, droplet_list: list, sample_idx: int
+):
+    """
+    Iterates through droplets in the sample and creates image files 
+    + metadata for droplets for inference
+    """
+    df = pd.read_excel(
+        sample_list[sample_idx]['xlsx_path'],
+        index_col=0,
+        sheet_name=None,
+    )
+    feats = df['Sheet1']
+
+    img = ND2Reader(sample_list[sample_idx]['img_path'])
+    img.iter_axes = 'c'
+    img = np.array(img)
+    
+    for droplet in feats.index:
+        # extract x & y coordinates of the center + diameter
+        x, y, d = feats[['TrueCentroidX', 'TrueCentroidY', 'DiameterMeasure']].loc[droplet]
+        x, y, d = map(int, [x, y, d])
+        # check if we get to the edge of the image:
+        r = int(np.min([d//2, x, y, img.shape[1]-x, img.shape[2]-y]))
+        # image
+        drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int32)
+        # check for bad images
+        if img_is_good(drop_img, **config.HOUGH_CIRCLES):
+            np.save(f'{config.ROOT_PATH}/data/inference/img{int(droplet)}.npy', drop_img)
+            # save metadata
+            droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
 
 def img_is_good(img, dp, minDist, param1, param2, minRadius, pct, resize_size):
     """
@@ -184,24 +214,46 @@ def img_is_good(img, dp, minDist, param1, param2, minRadius, pct, resize_size):
     
 
 if __name__ == '__main__':
-    if not os.path.exists(f'{config.ROOT_PATH}/data/clean'):
+    # prepare for train
+    if not os.path.exists(f'{config.ROOT_PATH}/data/train'):
         patch_dataset()
-        os.makedirs(f'{config.ROOT_PATH}/data/clean')
+        os.makedirs(f'{config.ROOT_PATH}/data/train')
 
         # check data folder to look for img files and
         # create a list with all sample info: sample name, img path, xlsx path, info txt path
-        sample_list = get_sample_list(config.DATASETS)
+        sample_list = get_sample_list(config.TRAIN_DATASETS)
         droplet_list = []
         labels = []
 
+        print('Creating the train dataset...')
         for i, sample in enumerate(tqdm(sample_list)):
             create_splits_with_labels(sample_list, droplet_list, i, labels)
         
-        np.save(f'{config.ROOT_PATH}/data/clean/labels.npy', np.array(labels, np.int8))
-        with open(f'{config.ROOT_PATH}/data/clean/samples.json', 'w') as f:
+        np.save(f'{config.ROOT_PATH}/data/train/labels.npy', np.array(labels, np.int8))
+        with open(f'{config.ROOT_PATH}/data/train/samples.json', 'w') as f:
             json.dump({'samples': sample_list}, f)
-        with open(f'{config.ROOT_PATH}/data/clean/droplets.json', 'w') as f:
+        with open(f'{config.ROOT_PATH}/data/train/droplets.json', 'w') as f:
             json.dump({'droplets': droplet_list}, f)
     else:
-        print('The dataset has already been prepared. If you want to prepare a new set of datasets, delete the data/clean folder and re-run the script.')
+        print('The dataset has already been prepared. If you want to prepare a new set of datasets, delete the data/train folder and re-run the script.')
+    
+    # prepare for inference
+    if not os.path.exists(f'{config.ROOT_PATH}/data/inference'):
+        os.makedirs(f'{config.ROOT_PATH}/data/inference')
+
+        # check data folder to look for img files and
+        # create a list with all sample info: sample name, img path, xlsx path, info txt path
+        sample_list = get_sample_list(config.INFERENCE_DATASETS)
+        droplet_list = []
+
+        print('Creating the inference dataset...')
+        for i, sample in enumerate(tqdm(sample_list)):
+            create_splits_without_labels(sample_list, droplet_list, i)
+        
+        with open(f'{config.ROOT_PATH}/data/inference/samples.json', 'w') as f:
+            json.dump({'samples': sample_list}, f)
+        with open(f'{config.ROOT_PATH}/data/inference/droplets.json', 'w') as f:
+            json.dump({'droplets': droplet_list}, f)
+    else:
+        print('The dataset has already been prepared. If you want to prepare a new set of datasets, delete the data/inference folder and re-run the script.')
 

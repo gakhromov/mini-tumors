@@ -3,10 +3,14 @@ import os
 ROOT_PATH = os.getcwd()
 
 # Dataset params
-DATASETS = [
+TRAIN_DATASETS = [
     "ColonCancer", 
     # "BrainCancer",
 ]
+INFERENCE_DATASETS = [
+    "ColonCancerInference", 
+]
+
 IMG_SIZE = (64, 64)
 
 # Bad droplet image detection alg params
