@@ -1,7 +1,7 @@
 # Instructions for local training
 [<< go back to the main README](../README.md)
 1. Make sure that the training dataset is properly set up. All the necessary data resulting from the prepare_dataset.py script should be in the 'data/train' subfolder.
-2. Run the training script with `pipenv run python train.py`. If desired, you can also manually specify the number for which to train the model (by default, 15) and the file name under which to save the best model (by default, saved as 'saved_models/best_model.pt'). For example, you can run `pipenv run python main.py --n-epochs 5 --model-filename "saved_models/second_best_model.pt"`.
+2. Run the training script with `pipenv run python train.py`. If desired, you can also manually specify the number for which to train the model (by default, 15) and the file name under which to save the best model (by default, saved as 'saved_models/best_model.pt'). For example, you could run `pipenv run python main.py --n-epochs 5 --model-filename "saved_models/custom_model_name.pt"`.
 
 
 # Instructions for training on Euler
@@ -10,7 +10,7 @@
 2. Type the command `module load gcc/8.2.0 python_gpu/3.10.4`. **NB**: you can avoid having to enter this command everytime you access the cluster by appending those lines (`module load gcc/8.2.0 python_gpu/3.10.4`) to the `.bashrc` file in your home directory on the cluster.
 3. In the cluster, navigate to the repo and type a command of the following type:
 ```
-bsub -W 72:00 -R "rusage[mem=2048,ngpus_excl_p=1]" -R "select[gpu_model0=NVIDIAGeForceGTX1080]" -o output_file.txt "pipenv run python train.py --n-epochs 5 --model-filename "saved_models/second_best_model.pt"
+bsub -W 72:00 -R "rusage[mem=2048,ngpus_excl_p=1]" -R "select[gpu_model0=NVIDIAGeForceGTX1080]" -o output_file.txt "pipenv run python train.py --n-epochs 5 --model-filename "saved_models/custom_model_name.pt"
 ```
 For the possible arguments that you can call, please refer to the local training instructions above.
 In general, you call bsub, follow it with the arguments of your request, then end with a double-quoted version of the command that you would want to call on your local computer. Here is [documentation](https://scicomp.ethz.ch/wiki/LSF_mini_reference) for bsub commands and their arguments. In the above example command, the used arguments are explained below:

@@ -141,7 +141,7 @@ def create_splits_with_labels(
                 droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
 
 def create_splits_without_labels(
-    sample_list: list, droplet_list: list, sample_idx: int
+    sample_list: list, droplet_list: list, sample_idx: int, clean_idx: int
 ):
     """
     Iterates through droplets in the sample and creates image files 
@@ -168,9 +168,12 @@ def create_splits_without_labels(
         drop_img = img[:, x-r:x+r, y-r:y+r].astype(np.int32)
         # check for bad images
         if img_is_good(drop_img, **config.HOUGH_CIRCLES):
-            np.save(f'{config.ROOT_PATH}/data/inference/img{int(droplet)}.npy', drop_img)
+            np.save(f'{config.ROOT_PATH}/data/inference/img{int(clean_idx)}.npy', drop_img)
             # save metadata
             droplet_list.append({'sample_idx': sample_idx, 'x': x, 'y': y, 'r': r})
+            clean_idx += 1
+    
+    return clean_idx
 
 def img_is_good(img, dp, minDist, param1, param2, minRadius, pct, resize_size):
     """
@@ -247,8 +250,9 @@ if __name__ == '__main__':
         droplet_list = []
 
         print('Creating the inference dataset...')
-        for i, sample in enumerate(tqdm(sample_list)):
-            create_splits_without_labels(sample_list, droplet_list, i)
+        clean_idx = 0
+        for sample_idx, sample in enumerate(tqdm(sample_list)):
+            clean_idx = create_splits_without_labels(sample_list, droplet_list, sample_idx, clean_idx)
         
         with open(f'{config.ROOT_PATH}/data/inference/samples.json', 'w') as f:
             json.dump({'samples': sample_list}, f)

@@ -9,3 +9,4 @@ model_weights/
 tensorboard/
 wandb/
 saved_models/
+predictions.csv
