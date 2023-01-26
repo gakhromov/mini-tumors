@@ -1,8 +1,7 @@
 # Instructions for local training
 [<< go back to the main README](../README.md)
-1. Specify all the different option using the parser, for example:
-`--state "train"`, `--n_epochs 10`, `--use_sampler True` (to have a balanced dataset)
-2. Run `pipenv run python main.py`
+1. Make sure that the training dataset is properly set up. All the necessary data resulting from the prepare_dataset.py script should be in the 'data/train' subfolder.
+2. Run the training script with `pipenv run python train.py`. If desired, you can also manually specify the number for which to train the model (by default, 15) and the file name under which to save the best model (by default, saved as 'saved_models/best_model.pt'). For example, you can run `pipenv run python main.py --n-epochs 5 --model-filename "saved_models/second_best_model.pt"`.
 
 
 # Instructions for training on Euler
