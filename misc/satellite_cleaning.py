@@ -63,7 +63,7 @@ def circle_weight(circle, points):
     # Return fraction represented in points
     return len(points) / denom
 
-def clean_sattelites(image, verbose=True, brightness_threshold_percentile=99, elimination_threshold=50, overlap_padding=20, circle_mask_padding=10):
+def clean_satellites(image, verbose=True, brightness_threshold_percentile=99, elimination_threshold=50, overlap_padding=20, circle_mask_padding=10):
     '''
     Apply satellite dropplet cleaning technique to image (grayscale array). 
     Techinque should be applied to the large images and will not work properly with individual droplets
@@ -238,7 +238,7 @@ if __name__ == "__main__":
     
     test_image = nd2.imread(path)[-1]
 
-    masked_image = clean_sattelites(test_image)
+    masked_image = clean_satellites(test_image)
 
     from matplotlib import pyplot as plt
     plt.imshow(test_image)

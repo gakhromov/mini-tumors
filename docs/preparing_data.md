@@ -15,10 +15,10 @@ When you have prepared the dataset, follow these steps to set it up for the subs
 ```bash
 scp -r TumorScoring mbrassard@euler.ethz.ch:/cluster/home/mbrassard/mini-tumors/data/
 ```
-2. Configure the names of the datasets you want to use in `data/config.py` in the arrays `TRAIN_DATASETS` and `INFERENCE_DATASETS`. For example, if you want to use `BrainCancer` as `ColonCancer` train datasets and `ColonCancerInference` as an inference dataset, you should change the file so that variables look like that:
+2. Configure the names of the datasets you want to use in `data/config.py` in the arrays `TRAIN_DATASETS` and `INFERENCE_DATASETS`. For example, if you want to use `ColonCancer` as a training dataset and `ColonCancerInference` as an inference dataset, you should change the file so that variables look like that:
 ```python
 TRAIN_DATASETS = [
-    "BrainCancer", "ColonCancer"
+    "ColonCancer"
 ]
 INFERENCE_DATASETS = [
     "ColonCancerInference"

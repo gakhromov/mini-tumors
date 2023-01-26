@@ -54,5 +54,7 @@ if __name__ == '__main__':
 
     # Save data
     predictions_table = pd.DataFrame(data = {'image' : [f'img{i}.npy' for i in range(dataset_sizes['inference'])], 'prediction' : predictions})
+    if os.path.dirname(args.predictions_filename) != '':
+        os.makedirs(os.path.dirname(args.predictions_filename), exist_ok=True)
     predictions_table.to_csv(args.predictions_filename, index = False)
     print(f"Predictions saved to {args.predictions_filename}")
