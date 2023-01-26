@@ -12,7 +12,7 @@ import copy
 from data import data
 import augment_data
 import argparse
-import tqdm as tqdm
+from tqdm import tqdm
 
 # Argument parser
 parser = argparse.ArgumentParser()
@@ -70,7 +70,7 @@ def train_model(model, criterion, optimizer, num_epochs=25):
             running_corrects = 0
 
             # Iterate over data.
-            for inputs, labels in enumerate(tqdm(dataloaders[phase])):
+            for inputs, labels in tqdm(dataloaders[phase]):
                 inputs = data_transforms[phase](inputs)
                 inputs = inputs.to(device)
                 labels = labels.to(device)
