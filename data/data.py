@@ -92,7 +92,8 @@ class Data:
             img = self.transform(img)
         else:
             img = img[None,:,:]
-        return img, torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        return torch.tensor(np.array(img), dtype=torch.float32).repeat(3, 1, 1), torch.tensor(self.labels[idx, 1], dtype=torch.long)
+        # return img, torch.tensor(self.labels[idx, 1], dtype=torch.long)
     
     def __min_max_norm(self, x, min=None, max=None, clip=True):
         if min is None:
