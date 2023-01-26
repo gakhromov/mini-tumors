@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # Load inference data and model
     print("Loading model and data...")
     os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
-    mean = np.array([0.485, 0.456, 0.406]) # should those be adaptable?
+    mean = np.array([0.485, 0.456, 0.406])
     std = np.array([0.229, 0.224, 0.225])
     data_transforms = {
         'inference': transforms.Compose([
